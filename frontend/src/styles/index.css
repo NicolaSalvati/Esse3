@@ -1,0 +1,15 @@
+/* Stili di base */
+body {
+  margin: 0;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f8f9fa;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+/* Importa gli stili di App.css */
+@import './App.css';
