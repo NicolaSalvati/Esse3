@@ -50,16 +50,15 @@ const LoginPage = () => {
     setIsLoading(true);
     
     try {
-      const { success, message } = await login(formData.email, formData.password);
+      const { success, message, user } = await login(formData.email, formData.password);
       
       if (success) {
-        // Reindirizza in base al ruolo
-        const userRole = localStorage.getItem('userRole');
-        if (userRole === 'student') {
+        // Reindirizza in base al ruolo dell'utente restituito dalla risposta
+        if (user.role === 'student') {
           navigate('/student');
-        } else if (userRole === 'admin') {
+        } else if (user.role === 'admin') {
           navigate('/admin');
-        } else if (userRole === 'superadmin') {
+        } else if (user.role === 'superadmin') {
           navigate('/superadmin');
         } else {
           navigate('/');

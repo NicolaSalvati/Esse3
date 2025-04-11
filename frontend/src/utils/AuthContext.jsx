@@ -38,7 +38,8 @@ export const AuthProvider = ({ children }) => {
         (error) => {
           if (error.response && error.response.status === 401) {
             // Token scaduto o non valido
-            logout();
+            console.log('Token non valido o scaduto, effettuo logout');
+            clearAuthData();
             navigate('/login');
           }
           return Promise.reject(error);
@@ -48,6 +49,24 @@ export const AuthProvider = ({ children }) => {
     
     setupAxiosInterceptors();
   }, [token, navigate]);
+
+  // Funzione per pulire tutti i dati di autenticazione
+  const clearAuthData = () => {
+    // Rimuovi tutti i dati di sessione dal localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    
+    // Pulisci anche eventuali altri dati di sessione
+    sessionStorage.clear();
+    
+    // Resetta lo stato
+    setToken(null);
+    setUser(null);
+    setError(null);
+  };
 
   // Verifica il token all'avvio dell'applicazione
   useEffect(() => {
@@ -60,15 +79,50 @@ export const AuthProvider = ({ children }) => {
           
           if (decoded.exp < currentTime) {
             // Token scaduto
-            logout();
-          } else {
-            // Token valido, ottieni i dati dell'utente
+            console.log('Token scaduto, effettuo logout');
+            clearAuthData();
+            return;
+          }
+          
+          // Verifica che l'ID utente nel token corrisponda all'ID salvato
+          const savedUserId = localStorage.getItem('userId');
+          const savedUserEmail = localStorage.getItem('userEmail');
+          
+          if (decoded.id !== savedUserId) {
+            console.error('ID utente nel token non corrisponde all\'ID salvato');
+            clearAuthData();
+            return;
+          }
+          
+          // Token valido, ottieni i dati dell'utente
+          try {
             const response = await axios.get('/auth/me');
+            
+            // Verifica che l'ID utente nei dati corrisponda all'ID nel token
+            if (response.data.data._id !== decoded.id) {
+              console.error('ID utente nei dati non corrisponde all\'ID nel token');
+              clearAuthData();
+              return;
+            }
+            
+            // Verifica che l'email nei dati corrisponda all'email salvata
+            if (response.data.data.email !== savedUserEmail) {
+              console.error('Email utente nei dati non corrisponde all\'email salvata');
+              clearAuthData();
+              return;
+            }
+            
+            // Assicuriamoci che i dati dell'utente siano aggiornati
             setUser(response.data.data);
+            console.log('Utente verificato:', response.data.data.email, 'Ruolo:', response.data.data.role);
+          } catch (error) {
+            console.error('Errore durante il recupero dei dati utente:', error);
+            clearAuthData();
+            return;
           }
         } catch (error) {
           console.error('Errore durante la verifica del token:', error);
-          logout();
+          clearAuthData();
         }
       }
       setLoading(false);
@@ -80,19 +134,26 @@ export const AuthProvider = ({ children }) => {
   // Funzione di login
   const login = async (email, password) => {
     try {
+      // Prima di effettuare un nuovo login, assicuriamoci di pulire qualsiasi dato di sessione precedente
+      clearAuthData();
+      
       setError(null);
       const response = await axios.post('/auth/login', { email, password });
       
       const { token, refreshToken, user } = response.data;
       
-      // Salva il token nel localStorage
+      // Salva il token e i dati utente nel localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('userRole', user.role); // Salva il ruolo per sicurezza
+      localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userId', user.id);
+      localStorage.setItem('userEmail', user.email);
       
-      // Aggiorna lo stato
+      // Aggiorna lo stato con i dati dell'utente dalla risposta
       setToken(token);
       setUser(user);
+      
+      console.log('Login effettuato come:', user.email, 'Ruolo:', user.role, 'ID:', user.id);
       
       return { success: true, user, message: 'Login effettuato con successo' };
     } catch (error) {
@@ -117,13 +178,14 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       setError(null);
+      console.log('Dati di registrazione inviati:', userData);
       const response = await axios.post('/auth/register', userData);
       
       return { success: true, data: response.data };
     } catch (error) {
       console.error('Errore durante la registrazione:', error);
       
-      let errorMessage = 'Errore durante la registrazione. Riprova più tardi.';
+      let errorMessage = 'Errore durante la registrazione. Verifica i dati inseriti e riprova.';
       
       if (error.response) {
         // Il server ha risposto con un codice di errore
@@ -145,16 +207,11 @@ export const AuthProvider = ({ children }) => {
 
   // Funzione di logout
   const logout = () => {
-    // Rimuovi il token dal localStorage
-    localStorage.removeItem('token');
-    localStorage.removeItem('refreshToken');
-    
-    // Resetta lo stato
-    setToken(null);
-    setUser(null);
+    // Pulisci tutti i dati di autenticazione
+    clearAuthData();
     
     // Reindirizza alla pagina di login
-    navigate('/login');
+    window.location.href = '/login';
   };
 
   // Verifica se l'utente è autenticato

@@ -1,0 +1,845 @@
+/* Glassmorphism CSS - Effetto trasparenza blu */
+
+:root {
+  --glass-blue-primary: rgba(13, 110, 253, 0.75);
+  --glass-blue-secondary: rgba(25, 135, 255, 0.65);
+  --glass-blue-light: rgba(173, 216, 255, 0.45);
+  --glass-blue-dark: rgba(0, 64, 133, 0.85);
+  --glass-blue-accent: rgba(0, 123, 255, 0.9);
+  --glass-white: rgba(255, 255, 255, 0.25);
+  --glass-border: rgba(255, 255, 255, 0.18);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --glass-blur: 12px;
+}
+
+/* Stile di base per il corpo della pagina */
+body {
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Navbar con effetto glassmorphism */
+.glass-navbar {
+  background: var(--glass-blue-primary) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.nav-link-animated {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.nav-link-animated::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background-color: white;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link-animated:hover::after {
+  width: 80%;
+}
+
+/* Card con effetto glassmorphism */
+.glass-card-blue {
+  background: var(--glass-blue-light) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.glass-card-blue:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card-blue .card-header {
+  background: var(--glass-blue-primary) !important;
+  border-bottom: 1px solid var(--glass-border);
+  padding: 15px 20px;
+  font-weight: 600;
+}
+
+.glass-card-blue .card-body {
+  padding: 20px;
+}
+
+.glass-card-blue .card-footer {
+  background: rgba(248, 249, 250, 0.2) !important;
+  border-top: 1px solid var(--glass-border);
+  padding: 15px 20px;
+}
+
+/* Bottoni con effetto glassmorphism */
+.glass-btn {
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  padding: 8px 16px;
+}
+
+.glass-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.glass-btn:active {
+  transform: translateY(0);
+}
+
+.glass-btn.btn-primary {
+  background: var(--glass-blue-primary);
+}
+
+.glass-btn.btn-secondary {
+  background: rgba(108, 117, 125, 0.75);
+}
+
+.glass-btn.btn-success {
+  background: rgba(25, 135, 84, 0.75);
+}
+
+.glass-btn.btn-info {
+  background: rgba(13, 202, 240, 0.75);
+}
+
+.glass-btn.btn-warning {
+  background: rgba(255, 193, 7, 0.75);
+}
+
+.glass-btn.btn-danger {
+  background: rgba(220, 53, 69, 0.75);
+}
+
+.glass-btn.btn-light {
+  background: rgba(248, 249, 250, 0.75);
+}
+
+.glass-btn.btn-dark {
+  background: rgba(33, 37, 41, 0.75);
+}
+
+.glass-btn.btn-outline-primary {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--glass-blue-primary);
+  color: var(--glass-blue-primary);
+}
+
+.glass-btn.btn-outline-primary:hover {
+  background: var(--glass-blue-primary);
+  color: white;
+}
+
+.glass-btn.btn-outline-light {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.glass-btn.btn-outline-light:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+/* Input con effetto glassmorphism */
+.glass-input {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: rgba(13, 110, 253, 0.5);
+}
+
+.glass-input::placeholder {
+  color: rgba(0, 0, 0, 0.4);
+}
+
+/* Dropdown con effetto glassmorphism */
+.glass-dropdown {
+  background: var(--glass-blue-light) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  box-shadow: var(--glass-shadow);
+  padding: 8px 0;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  background: transparent !important;
+  transition: all 0.3s ease;
+  padding: 8px 20px;
+  color: #333;
+}
+
+.dropdown-item:hover {
+  background: var(--glass-blue-secondary) !important;
+  color: white;
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--glass-border);
+  margin: 8px 0;
+}
+
+/* Modal con effetto glassmorphism */
+.glass-modal .modal-content {
+  background: var(--glass-blue-light) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+.glass-modal .modal-header {
+  background: var(--glass-blue-primary) !important;
+  border-bottom: 1px solid var(--glass-border);
+  padding: 15px 20px;
+  color: white;
+}
+
+.glass-modal .modal-body {
+  padding: 20px;
+}
+
+.glass-modal .modal-footer {
+  background: rgba(248, 249, 250, 0.2) !important;
+  border-top: 1px solid var(--glass-border);
+  padding: 15px 20px;
+}
+
+/* Tabelle con effetto glassmorphism */
+.glass-table {
+  background: var(--glass-blue-light) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.glass-table thead th {
+  background: var(--glass-blue-primary) !important;
+  color: white;
+  padding: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.glass-table tbody tr {
+  background: rgba(255, 255, 255, 0.1) !important;
+  transition: all 0.3s ease;
+}
+
+.glass-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.glass-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  vertical-align: middle;
+}
+
+.glass-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Stepper per il processo di immatricolazione */
+.stepper-container {
+  overflow-x: auto;
+  padding: 20px 0;
+  margin-bottom: 30px;
+}
+
+.stepper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 800px;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+  cursor: pointer;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 20px;
+  width: 100%;
+  height: 2px;
+  background: #dee2e6;
+  left: 50%;
+  z-index: 0;
+}
+
+.step.completed:not(:last-child)::after {
+  background: var(--glass-blue-primary);
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  z-index: 1;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.step.active .step-number {
+  background: var(--glass-blue-primary);
+  border-color: var(--glass-blue-primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.5);
+}
+
+.step.completed .step-number {
+  background: var(--glass-blue-primary);
+  border-color: var(--glass-blue-primary);
+  color: white;
+}
+
+.step-label {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  text-align: center;
+  color: #6c757d;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.step.active .step-label {
+  color: var(--glass-blue-primary);
+  font-weight: bold;
+}
+
+.step.completed .step-label {
+  color: var(--glass-blue-primary);
+}
+
+/* Sfondi con gradiente blu */
+.blue-gradient-bg {
+  background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);
+}
+
+/* Effetti hover */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Animazioni */
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+.animate-fadeInLeft {
+  animation: fadeInLeft 0.5s ease forwards;
+}
+
+.animate-fadeInRight {
+  animation: fadeInRight 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Personalizzazioni per il tema dell'università */
+.navbar-brand img {
+  max-height: 40px;
+}
+
+.footer {
+  background: var(--glass-blue-dark);
+  color: white;
+  padding: 60px 0 30px;
+}
+
+/* Stile per le pagine admin */
+.admin-dashboard .glass-card-blue {
+  margin-bottom: 20px;
+}
+
+.admin-dashboard .card-stats {
+  text-align: center;
+  padding: 20px;
+}
+
+.admin-dashboard .stat-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--glass-blue-primary);
+}
+
+.admin-dashboard .stat-value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.admin-dashboard .stat-label {
+  font-size: 1rem;
+  color: #6c757d;
+}
+
+/* Tabella admin con effetto glassmorphism */
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--glass-blue-light);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  margin-bottom: 20px;
+}
+
+.admin-table thead th {
+  background: var(--glass-blue-primary);
+  color: white;
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.admin-table tbody tr {
+  background: rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.admin-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Paginazione con effetto glassmorphism */
+.glass-pagination .page-item .page-link {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--glass-border);
+  color: #212529;
+  transition: all 0.3s ease;
+  margin: 0 3px;
+  border-radius: 6px;
+}
+
+.glass-pagination .page-item.active .page-link {
+  background: var(--glass-blue-primary);
+  border-color: var(--glass-blue-primary);
+  color: white;
+  box-shadow: 0 0 10px rgba(13, 110, 253, 0.3);
+}
+
+.glass-pagination .page-item .page-link:hover {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: var(--glass-border);
+  color: #212529;
+}
+
+/* Filtri admin con effetto glassmorphism */
+.admin-filters {
+  background: var(--glass-blue-light);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 25px;
+  box-shadow: var(--glass-shadow);
+}
+
+.admin-filters .form-control,
+.admin-filters .form-select {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: var(--glass-border);
+  border-radius: 8px;
+}
+
+.admin-filters .form-control:focus,
+.admin-filters .form-select:focus {
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+/* Stile per la home page */
+.hero-section {
+  position: relative;
+  padding: 120px 0;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.8) 0%, rgba(0, 64, 133, 0.9) 100%);
+  color: white;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.hero-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/images/university-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: -1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hero-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 30px;
+  font-weight: 300;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.feature-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: var(--glass-blue-primary);
+}
+
+/* Stile per il profilo utente */
+.profile-header {
+  background: var(--glass-blue-primary);
+  color: white;
+  padding: 40px 0;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.8) 0%, rgba(0, 64, 133, 0.9) 100%);
+  z-index: 0;
+}
+
+.profile-header-content {
+  position: relative;
+  z-index: 1;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-info {
+  padding-left: 20px;
+}
+
+.profile-tabs .nav-link {
+  color: #495057;
+  border: none;
+  padding: 15px 20px;
+  border-radius: 0;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.profile-tabs .nav-link.active {
+  color: var(--glass-blue-primary);
+  background: transparent;
+  border-bottom: 3px solid var(--glass-blue-primary);
+}
+
+/* Stile per le info università */
+.university-info-section {
+  padding: 60px 0;
+  background: linear-gradient(135deg, #f0f8ff 0%, #e6f2ff 100%);
+}
+
+.university-info-card {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.university-info-icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: var(--glass-blue-primary);
+}
+
+/* Stile per il footer */
+.footer {
+  background: var(--glass-blue-dark);
+  color: white;
+  padding: 60px 0 30px;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(0, 64, 133, 0.95) 0%, rgba(0, 32, 84, 0.98) 100%);
+  z-index: 0;
+}
+
+.footer-content {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-logo {
+  max-width: 180px;
+  margin-bottom: 20px;
+}
+
+.footer-heading {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer-heading::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--glass-blue-primary);
+}
+
+.footer-link {
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 10px;
+  transition: all 0.3s ease;
+}
+
+.footer-link:hover {
+  color: white;
+  transform: translateX(5px);
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.footer-social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+}
+
+.footer-social-icon:hover {
+  background: var(--glass-blue-primary);
+  transform: translateY(-5px);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  margin-top: 40px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+  
+  .hero-section {
+    padding: 80px 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .stepper {
+    min-width: 600px;
+  }
+  
+  .step-label {
+    font-size: 0.7rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-section {
+    padding: 60px 0;
+  }
+  
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  
+  .hero-section {
+    padding: 50px 0;
+  }
+  
+  .glass-card-blue {
+    border-radius: 10px;
+  }
+  
+  .glass-btn {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}

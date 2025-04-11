@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
       });
     }
 
-    const { name, email, password, corso, telefono, indirizzo } = req.body;
+    const { name, email, password, corso, role } = req.body;
 
     // Verifica se l'utente esiste già
     const userExists = await User.findOne({ email });
@@ -27,16 +27,18 @@ exports.register = async (req, res) => {
       });
     }
 
+    // Verifica che il ruolo sia valido
+    const validRoles = ['student', 'teacher'];
+    const userRole = validRoles.includes(role) ? role : 'student';
+
     // Crea l'utente con matricola temporanea
     const user = await User.create({
       name,
       email,
       password,
       matricola: 'PENDING', // Sarà assegnata dall'admin
-      role: 'student',
+      role: userRole,
       corso,
-      telefono: telefono || '',
-      indirizzo: indirizzo || '',
       isApproved: false
     });
 
@@ -60,9 +62,19 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     console.error('Errore durante la registrazione:', error);
+    
+    // Fornisci un messaggio di errore più specifico
+    let errorMessage = 'Si è verificato un errore durante la registrazione.';
+    
+    if (error.name === 'ValidationError') {
+      errorMessage = Object.values(error.errors).map(val => val.message).join(', ');
+    } else if (error.code === 11000) {
+      errorMessage = "Email già registrata. Utilizza un'altra email.";
+    }
+    
     res.status(500).json({
       success: false,
-      message: 'Errore durante la registrazione. Riprova più tardi.'
+      message: errorMessage
     });
   }
 };

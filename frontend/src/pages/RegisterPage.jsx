@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, Card, Alert, Spinner } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faEnvelope, faPhone, faHome, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faEnvelope, faUserPlus, faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../utils/AuthContext';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
@@ -27,9 +27,9 @@ const RegisterPage = () => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Le password non corrispondono')
       .required('Conferma la password'),
-    telefono: Yup.string()
-      .matches(/^[0-9+\s-]{8,15}$/, 'Inserisci un numero di telefono valido'),
-    indirizzo: Yup.string()
+    role: Yup.string()
+      .required('Seleziona il tuo ruolo')
+      .oneOf(['student', 'teacher'], 'Seleziona un ruolo valido')
   });
 
   // Gestione dell'invio del form
@@ -56,8 +56,8 @@ const RegisterPage = () => {
         setLocalError(message);
       }
     } catch (error) {
-      setLocalError('Errore durante la registrazione. Riprova più tardi.');
       console.error('Errore durante la registrazione:', error);
+      setLocalError('Si è verificato un errore di connessione. Verifica la tua connessione internet e riprova.');
     } finally {
       setIsLoading(false);
       setSubmitting(false);
@@ -90,8 +90,7 @@ const RegisterPage = () => {
                     email: '',
                     password: '',
                     confirmPassword: '',
-                    telefono: '',
-                    indirizzo: ''
+                    role: 'student'
                   }}
                   validationSchema={validationSchema}
                   onSubmit={handleSubmit}
@@ -199,47 +198,49 @@ const RegisterPage = () => {
                       </Row>
                       
                       <Row>
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
+                        <Col md={12}>
+                          <Form.Group className="mb-4">
                             <Form.Label>
-                              <FontAwesomeIcon icon={faPhone} className="me-2" />
-                              Telefono (opzionale)
+                              <FontAwesomeIcon icon={faUserGraduate} className="me-2" />
+                              Ruolo
                             </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name="telefono"
-                              value={values.telefono}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              placeholder="Inserisci il tuo numero di telefono"
-                              isInvalid={touched.telefono && !!errors.telefono}
-                              className="hover-glow"
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.telefono}
-                            </Form.Control.Feedback>
-                          </Form.Group>
-                        </Col>
-                        
-                        <Col md={6}>
-                          <Form.Group className="mb-3">
-                            <Form.Label>
-                              <FontAwesomeIcon icon={faHome} className="me-2" />
-                              Indirizzo (opzionale)
-                            </Form.Label>
-                            <Form.Control
-                              type="text"
-                              name="indirizzo"
-                              value={values.indirizzo}
-                              onChange={handleChange}
-                              onBlur={handleBlur}
-                              placeholder="Inserisci il tuo indirizzo"
-                              isInvalid={touched.indirizzo && !!errors.indirizzo}
-                              className="hover-glow"
-                            />
-                            <Form.Control.Feedback type="invalid">
-                              {errors.indirizzo}
-                            </Form.Control.Feedback>
+                            <div className="d-flex">
+                              <div className="form-check me-4">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="role"
+                                  id="roleStudent"
+                                  value="student"
+                                  checked={values.role === 'student'}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                                <label className="form-check-label" htmlFor="roleStudent">
+                                  <FontAwesomeIcon icon={faUserGraduate} className="me-2" />
+                                  Studente
+                                </label>
+                              </div>
+                              <div className="form-check">
+                                <input
+                                  className="form-check-input"
+                                  type="radio"
+                                  name="role"
+                                  id="roleTeacher"
+                                  value="teacher"
+                                  checked={values.role === 'teacher'}
+                                  onChange={handleChange}
+                                  onBlur={handleBlur}
+                                />
+                                <label className="form-check-label" htmlFor="roleTeacher">
+                                  <FontAwesomeIcon icon={faChalkboardTeacher} className="me-2" />
+                                  Insegnante
+                                </label>
+                              </div>
+                            </div>
+                            {touched.role && errors.role && (
+                              <div className="text-danger mt-1">{errors.role}</div>
+                            )}
                           </Form.Group>
                         </Col>
                       </Row>
