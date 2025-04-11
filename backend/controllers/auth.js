@@ -276,10 +276,10 @@ exports.assignMatricola = async (req, res) => {
     }
     
     // Verifica il formato della matricola
-    if (!matricola.startsWith('0124') || matricola.length !== 11) {
+    if (!matricola.startsWith('012400') || matricola.length !== 10) {
       return res.status(400).json({
         success: false,
-        message: 'La matricola deve iniziare con 0124 e avere 11 caratteri'
+        message: 'La matricola deve iniziare con 012400 e avere 10 caratteri'
       });
     }
     

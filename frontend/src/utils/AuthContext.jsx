@@ -88,12 +88,13 @@ export const AuthProvider = ({ children }) => {
       // Salva il token nel localStorage
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('userRole', user.role); // Salva il ruolo per sicurezza
       
       // Aggiorna lo stato
       setToken(token);
       setUser(user);
       
-      return { success: true, user };
+      return { success: true, user, message: 'Login effettuato con successo' };
     } catch (error) {
       console.error('Errore durante il login:', error);
       

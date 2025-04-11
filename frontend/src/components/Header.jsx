@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Row, Col, Navbar, Nav, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap, faSignOutAlt, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faGraduationCap, faSignOutAlt, faUser, faUserGraduate, faCog, faList } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../utils/AuthContext';
 
 const Header = () => {
@@ -37,8 +37,26 @@ const Header = () => {
                   
                   {(user.role === 'admin' || user.role === 'superadmin') && (
                     <>
-                      <Nav.Link as={Link} to="/admin" className="nav-link-animated mx-1">Dashboard</Nav.Link>
-                      <Nav.Link as={Link} to="/admin/matricole" className="nav-link-animated mx-1">Gestione Matricole</Nav.Link>
+                      <Nav.Link as={Link} to="/admin" className="nav-link-animated mx-1">
+                        <FontAwesomeIcon icon={faCog} className="me-1" />
+                        Dashboard
+                      </Nav.Link>
+                      <Nav.Link as={Link} to="/admin/matricole" className="nav-link-animated mx-1">
+                        <FontAwesomeIcon icon={faUserGraduate} className="me-1" />
+                        Gestione Matricole
+                      </Nav.Link>
+                      <Nav.Link as={Link} to="/admin/students" className="nav-link-animated mx-1">
+                        <FontAwesomeIcon icon={faUserGraduate} className="me-1" />
+                        Elenco Studenti
+                      </Nav.Link>
+                      <Nav.Link as={Link} to="/admin/immatricolazione" className="nav-link-animated mx-1">
+                        <FontAwesomeIcon icon={faList} className="me-1" />
+                        Richieste Immatricolazione
+                      </Nav.Link>
+                      <Nav.Link as={Link} to="/admin/facolta" className="nav-link-animated mx-1">
+                        <FontAwesomeIcon icon={faGraduationCap} className="me-1" />
+                        Gestione Facoltà
+                      </Nav.Link>
                     </>
                   )}
                   
@@ -47,10 +65,10 @@ const Header = () => {
                   )}
                   
                   <div className="d-flex align-items-center ms-2">
-                    <span className="text-white me-3">
+                    <Nav.Link as={Link} to="/profile" className="text-white me-3 nav-link-animated">
                       <FontAwesomeIcon icon={faUser} className="me-1" />
                       {user.name}
-                    </span>
+                    </Nav.Link>
                     <Button 
                       variant="outline-light" 
                       size="sm" 

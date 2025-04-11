@@ -1,190 +1,302 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Table, Badge, Button, Alert, Spinner } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form, Alert, Spinner, Table, Badge } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUserGraduate, faChalkboardTeacher, faUsers, faIdCard, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faUserGraduate, faGraduationCap, faCheck, faTimes, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-import { useAuth } from '../utils/AuthContext';
+import '../styles/AdminDashboard.css';
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
     totalStudents: 0,
-    pendingStudents: 0,
-    approvedStudents: 0
+    pendingRequests: 0,
+    totalCourses: 0,
+    totalFacolta: 0
   });
-  const [pendingStudents, setPendingStudents] = useState([]);
+  const [recentStudents, setRecentStudents] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { user } = useAuth();
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        // Ottieni tutti gli studenti
-        const response = await axios.get('/auth/users?role=student');
-        const students = response.data.data;
-        
-        // Calcola le statistiche
-        const approved = students.filter(student => student.isApproved);
-        const pending = students.filter(student => !student.isApproved);
-        
-        setStats({
-          totalStudents: students.length,
-          pendingStudents: pending.length,
-          approvedStudents: approved.length
-        });
-        
-        // Imposta gli studenti in attesa
-        setPendingStudents(pending.slice(0, 5)); // Mostra solo i primi 5
-        
-      } catch (err) {
-        console.error('Errore durante il recupero dei dati:', err);
-        setError('Impossibile caricare i dati. Riprova più tardi.');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchData();
+    fetchDashboardData();
   }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      
+      // Fetch statistics
+      const statsResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/stats`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      // Fetch recent students
+      const studentsResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/auth/users?role=student&limit=5&sort=-createdAt`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      // Fetch pending immatricolazione requests
+      const requestsResponse = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/v1/immatricolazione?status=pending&limit=5`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
+      
+      setStats({
+        totalStudents: statsResponse.data.totalStudents || 0,
+        pendingRequests: statsResponse.data.pendingRequests || 0,
+        totalCourses: statsResponse.data.totalCourses || 0,
+        totalFacolta: statsResponse.data.totalFacolta || 0
+      });
+      
+      setRecentStudents(studentsResponse.data.data || []);
+      setPendingRequests(requestsResponse.data.data || []);
+      setLoading(false);
+    } catch (err) {
+      setError('Errore durante il recupero dei dati della dashboard');
+      setLoading(false);
+      console.error(err);
+    }
+  };
 
   if (loading) {
     return (
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '80vh' }}>
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '400px' }}>
         <Spinner animation="border" variant="primary" />
       </div>
     );
   }
 
   return (
-    <div className="admin-dashboard py-5">
+    <div className="admin-dashboard py-4">
       <Container>
-        <h1 className="mb-4 text-center animate-fadeInUp">
-          <FontAwesomeIcon icon={faChalkboardTeacher} className="me-2" />
+        <h2 className="page-title mb-4">
+          <FontAwesomeIcon icon={faCog} className="me-2" />
           Dashboard Amministratore
-        </h1>
+        </h2>
         
-        <p className="text-center mb-5 animate-fadeInUp">
-          Benvenuto, <strong>{user.name}</strong>. Gestisci gli studenti e le matricole dal tuo pannello di controllo.
-        </p>
+        {error && <Alert variant="danger">{error}</Alert>}
         
-        {error && (
-          <Alert variant="danger" className="animate-fadeInUp">
-            {error}
-          </Alert>
-        )}
-        
-        {/* Statistiche */}
-        <Row className="mb-5">
-          <Col md={4} className="mb-4 mb-md-0">
-            <div className="stat-card animate-fadeInUp">
-              <div className="d-flex align-items-center">
-                <div className="me-3">
-                  <FontAwesomeIcon icon={faUsers} size="2x" className="text-primary" />
+        <Row className="stats-cards mb-4">
+          <Col md={3} sm={6} className="mb-3">
+            <Card className="stat-card bg-primary text-white">
+              <Card.Body className="d-flex align-items-center">
+                <div className="stat-icon">
+                  <FontAwesomeIcon icon={faUserGraduate} size="2x" />
                 </div>
-                <div>
-                  <div className="stat-value">{stats.totalStudents}</div>
+                <div className="stat-content ms-3">
+                  <h3 className="stat-value">{stats.totalStudents}</h3>
                   <div className="stat-label">Studenti Totali</div>
                 </div>
-              </div>
-            </div>
+              </Card.Body>
+              <Card.Footer className="bg-primary-dark text-white">
+                <a href="/admin/students" className="text-white text-decoration-none">
+                  Visualizza Tutti <i className="fas fa-arrow-right ms-1"></i>
+                </a>
+              </Card.Footer>
+            </Card>
           </Col>
           
-          <Col md={4} className="mb-4 mb-md-0">
-            <div className="stat-card animate-fadeInUp" style={{ animationDelay: '0.2s' }}>
-              <div className="d-flex align-items-center">
-                <div className="me-3">
-                  <FontAwesomeIcon icon={faCheckCircle} size="2x" className="text-success" />
+          <Col md={3} sm={6} className="mb-3">
+            <Card className="stat-card bg-warning text-white">
+              <Card.Body className="d-flex align-items-center">
+                <div className="stat-icon">
+                  <FontAwesomeIcon icon={faGraduationCap} size="2x" />
                 </div>
-                <div>
-                  <div className="stat-value">{stats.approvedStudents}</div>
-                  <div className="stat-label">Studenti Approvati</div>
+                <div className="stat-content ms-3">
+                  <h3 className="stat-value">{stats.pendingRequests}</h3>
+                  <div className="stat-label">Richieste in Attesa</div>
                 </div>
-              </div>
-            </div>
+              </Card.Body>
+              <Card.Footer className="bg-warning-dark text-white">
+                <a href="/admin/immatricolazione" className="text-white text-decoration-none">
+                  Gestisci Richieste <i className="fas fa-arrow-right ms-1"></i>
+                </a>
+              </Card.Footer>
+            </Card>
           </Col>
           
-          <Col md={4}>
-            <div className="stat-card animate-fadeInUp" style={{ animationDelay: '0.4s' }}>
-              <div className="d-flex align-items-center">
-                <div className="me-3">
-                  <FontAwesomeIcon icon={faIdCard} size="2x" className="text-warning" />
+          <Col md={3} sm={6} className="mb-3">
+            <Card className="stat-card bg-success text-white">
+              <Card.Body className="d-flex align-items-center">
+                <div className="stat-icon">
+                  <FontAwesomeIcon icon={faGraduationCap} size="2x" />
                 </div>
-                <div>
-                  <div className="stat-value">{stats.pendingStudents}</div>
-                  <div className="stat-label">Studenti in Attesa</div>
+                <div className="stat-content ms-3">
+                  <h3 className="stat-value">{stats.totalCourses}</h3>
+                  <div className="stat-label">Corsi di Laurea</div>
                 </div>
-              </div>
-            </div>
+              </Card.Body>
+              <Card.Footer className="bg-success-dark text-white">
+                <a href="/admin/facolta" className="text-white text-decoration-none">
+                  Gestisci Corsi <i className="fas fa-arrow-right ms-1"></i>
+                </a>
+              </Card.Footer>
+            </Card>
+          </Col>
+          
+          <Col md={3} sm={6} className="mb-3">
+            <Card className="stat-card bg-info text-white">
+              <Card.Body className="d-flex align-items-center">
+                <div className="stat-icon">
+                  <FontAwesomeIcon icon={faGraduationCap} size="2x" />
+                </div>
+                <div className="stat-content ms-3">
+                  <h3 className="stat-value">{stats.totalFacolta}</h3>
+                  <div className="stat-label">Facoltà</div>
+                </div>
+              </Card.Body>
+              <Card.Footer className="bg-info-dark text-white">
+                <a href="/admin/facolta" className="text-white text-decoration-none">
+                  Gestisci Facoltà <i className="fas fa-arrow-right ms-1"></i>
+                </a>
+              </Card.Footer>
+            </Card>
           </Col>
         </Row>
         
-        {/* Studenti in attesa */}
         <Row>
-          <Col lg={12}>
-            <Card className="shadow-sm dashboard-card animate-fadeInUp">
-              <Card.Header className="dashboard-card-header">
-                <h4 className="mb-0">Studenti in Attesa di Approvazione</h4>
+          <Col lg={6} className="mb-4">
+            <Card className="shadow-sm h-100">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Studenti Recenti</h5>
               </Card.Header>
-              <Card.Body>
-                {pendingStudents.length === 0 ? (
-                  <div className="text-center py-4">
-                    <FontAwesomeIcon icon={faUserGraduate} size="3x" className="text-muted mb-3" />
-                    <p>Nessuno studente in attesa di approvazione.</p>
-                  </div>
-                ) : (
-                  <>
-                    <Table responsive hover>
-                      <thead>
-                        <tr>
-                          <th>Nome</th>
-                          <th>Email</th>
-                          <th>Telefono</th>
-                          <th>Stato</th>
-                          <th>Azioni</th>
+              <Card.Body className="p-0">
+                {recentStudents.length > 0 ? (
+                  <Table hover responsive className="mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Nome</th>
+                        <th>Matricola</th>
+                        <th>Corso</th>
+                        <th>Azioni</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentStudents.map(student => (
+                        <tr key={student._id}>
+                          <td>{student.name}</td>
+                          <td>{student.matricola || 'Non assegnata'}</td>
+                          <td>{student.corso ? student.corso.nome : 'Non assegnato'}</td>
+                          <td>
+                            <Button
+                              variant="info"
+                              size="sm"
+                              className="me-1"
+                              as="a"
+                              href={`/admin/students?id=${student._id}`}
+                            >
+                              <FontAwesomeIcon icon={faEye} />
+                            </Button>
+                            <Button
+                              variant="primary"
+                              size="sm"
+                              as="a"
+                              href={`/admin/matricole?id=${student._id}`}
+                            >
+                              <FontAwesomeIcon icon={faEdit} />
+                            </Button>
+                          </td>
                         </tr>
-                      </thead>
-                      <tbody>
-                        {pendingStudents.map(student => (
-                          <tr key={student._id} className="student-list-item">
-                            <td>{student.name}</td>
-                            <td>{student.email}</td>
-                            <td>{student.telefono || 'Non specificato'}</td>
-                            <td>
-                              <Badge bg="warning">In attesa</Badge>
-                            </td>
-                            <td>
-                              <Button 
-                                as="a" 
-                                href="/admin/matricole" 
-                                variant="outline-primary" 
-                                size="sm"
-                                className="btn-animated"
-                              >
-                                Assegna Matricola
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </Table>
-                    
-                    {stats.pendingStudents > 5 && (
-                      <div className="text-center mt-3">
-                        <Button 
-                          as="a" 
-                          href="/admin/matricole" 
-                          variant="primary"
-                          className="btn-animated hover-lift"
-                        >
-                          Visualizza tutti ({stats.pendingStudents})
-                        </Button>
-                      </div>
-                    )}
-                  </>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-4">
+                    Nessuno studente registrato recentemente
+                  </div>
                 )}
               </Card.Body>
+              <Card.Footer className="bg-light">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  as="a"
+                  href="/admin/students"
+                  className="w-100"
+                >
+                  Visualizza Tutti gli Studenti
+                </Button>
+              </Card.Footer>
+            </Card>
+          </Col>
+          
+          <Col lg={6} className="mb-4">
+            <Card className="shadow-sm h-100">
+              <Card.Header className="bg-light">
+                <h5 className="mb-0">Richieste di Immatricolazione in Attesa</h5>
+              </Card.Header>
+              <Card.Body className="p-0">
+                {pendingRequests.length > 0 ? (
+                  <Table hover responsive className="mb-0">
+                    <thead className="table-light">
+                      <tr>
+                        <th>Studente</th>
+                        <th>Corso</th>
+                        <th>Data</th>
+                        <th>Azioni</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {pendingRequests.map(request => (
+                        <tr key={request._id}>
+                          <td>{request.student.name}</td>
+                          <td>{request.corso.nome}</td>
+                          <td>{new Date(request.createdAt).toLocaleDateString()}</td>
+                          <td>
+                            <Button
+                              variant="success"
+                              size="sm"
+                              className="me-1"
+                              as="a"
+                              href={`/admin/immatricolazione?id=${request._id}`}
+                            >
+                              <FontAwesomeIcon icon={faCheck} />
+                            </Button>
+                            <Button
+                              variant="danger"
+                              size="sm"
+                              as="a"
+                              href={`/admin/immatricolazione?id=${request._id}&reject=true`}
+                            >
+                              <FontAwesomeIcon icon={faTimes} />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <div className="text-center py-4">
+                    Nessuna richiesta di immatricolazione in attesa
+                  </div>
+                )}
+              </Card.Body>
+              <Card.Footer className="bg-light">
+                <Button
+                  variant="primary"
+                  size="sm"
+                  as="a"
+                  href="/admin/immatricolazione"
+                  className="w-100"
+                >
+                  Gestisci Tutte le Richieste
+                </Button>
+              </Card.Footer>
             </Card>
           </Col>
         </Row>

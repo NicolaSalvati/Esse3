@@ -29,6 +29,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // Definizione delle rotte
 app.use('/api/v1/auth', require('./routes/auth'));
+app.use('/api/v1/immatricolazione', require('./routes/immatricolazione'));
+app.use('/api/v1/facolta', require('./routes/facolta'));
 
 // Endpoint per creare un admin (solo in ambiente di sviluppo)
 if (process.env.NODE_ENV === 'development') {
