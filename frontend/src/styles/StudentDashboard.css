@@ -1,0 +1,128 @@
+.student-dashboard {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 160px);
+}
+
+.page-title {
+  color: #003366;
+  font-weight: 600;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.student-info-card {
+  transition: all 0.3s ease;
+  border: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.student-info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.student-info-item {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.25rem;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  color: #212529;
+}
+
+/* Timeline styling */
+.activity-timeline {
+  position: relative;
+  padding-left: 40px;
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-icon {
+  position: absolute;
+  left: -40px;
+  top: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.timeline-content {
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.timeline-title {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.timeline-text {
+  margin-bottom: 5px;
+  color: #6c757d;
+}
+
+.timeline-date {
+  display: block;
+  font-size: 0.8rem;
+  color: #adb5bd;
+  font-style: italic;
+}
+
+.activity-timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15px;
+  height: 100%;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+@media (min-width: 768px) {
+  .student-info-item {
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .info-label {
+    width: 180px;
+    margin-bottom: 0;
+  }
+  
+  .info-value {
+    flex: 1;
+  }
+}

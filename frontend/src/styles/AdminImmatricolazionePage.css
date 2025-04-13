@@ -1,0 +1,210 @@
+.admin-immatricolazione-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.admin-immatricolazione-title {
+  color: #003366;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+.admin-immatricolazione-filter {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+.admin-immatricolazione-filter select {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  min-width: 150px;
+}
+
+.admin-immatricolazione-empty {
+  text-align: center;
+  padding: 3rem;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  color: #666;
+}
+
+.admin-immatricolazione-list {
+  overflow-x: auto;
+}
+
+.admin-immatricolazione-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-immatricolazione-table th,
+.admin-immatricolazione-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.admin-immatricolazione-table th {
+  background-color: #f0f0f0;
+  font-weight: 600;
+  color: #333;
+}
+
+.admin-immatricolazione-table tr:hover {
+  background-color: #f9f9f9;
+}
+
+.admin-immatricolazione-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.status-pending {
+  background-color: #fffbe6;
+  color: #ad8b00;
+}
+
+.status-approved {
+  background-color: #f6ffed;
+  color: #52c41a;
+}
+
+.status-rejected {
+  background-color: #fff2f0;
+  color: #ff4d4f;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h3 {
+  margin-bottom: 1.5rem;
+  color: #003366;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.btn-primary {
+  background-color: #1890ff;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background-color: #096dd9;
+}
+
+.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: #d9d9d9;
+}
+
+.btn-success {
+  background-color: #52c41a;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background-color: #389e0d;
+}
+
+.btn-danger {
+  background-color: #ff4d4f;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #cf1322;
+}
+
+.btn-info {
+  background-color: #1890ff;
+  color: #fff;
+}
+
+.btn-info:hover {
+  background-color: #096dd9;
+}
+
+@media (max-width: 768px) {
+  .admin-immatricolazione-container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+  
+  .admin-immatricolazione-filter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .admin-immatricolazione-table th,
+  .admin-immatricolazione-table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+}
