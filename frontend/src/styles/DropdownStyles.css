@@ -1,0 +1,186 @@
+/* Stili per i dropdown di login e registrazione */
+
+/* Stile generale per i dropdown */
+.login-dropdown,
+.register-dropdown {
+  position: relative;
+  margin-left: 0.5rem;
+}
+
+/* Stile per i menu dropdown */
+.dropdown-menu-custom {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 320px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 1.5rem;
+  margin-top: 0.5rem;
+  transform-origin: top center;
+  overflow: hidden;
+  z-index: 1100;
+}
+
+.register-dropdown-menu {
+  width: 350px;
+}
+
+/* Titolo del dropdown */
+.dropdown-header-title {
+  color: #003366;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-header-title::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, #003366, #00a0e3);
+  transform: translateX(-50%);
+}
+
+/* Stile per i form compatti */
+.compact-form .form-label {
+  margin-bottom: 0.25rem;
+  color: #495057;
+  font-weight: 500;
+}
+
+.compact-form .form-control-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.compact-form .form-control-sm:focus {
+  border-color: #00a0e3;
+  box-shadow: 0 0 0 0.2rem rgba(0, 160, 227, 0.25);
+}
+
+/* Stile per i pulsanti nei dropdown */
+.login-dropdown-menu .btn,
+.register-dropdown-menu .btn {
+  background: linear-gradient(135deg, #003366, #00a0e3);
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.login-dropdown-menu .btn:hover,
+.register-dropdown-menu .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 160, 227, 0.3);
+  background: linear-gradient(135deg, #00a0e3, #003366);
+}
+
+/* Stile per i link nei dropdown */
+.login-dropdown-menu a,
+.register-dropdown-menu a {
+  color: #00a0e3;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.login-dropdown-menu a:hover,
+.register-dropdown-menu a:hover {
+  color: #003366;
+  text-decoration: underline;
+}
+
+/* Stile per il divider */
+.dropdown-divider {
+  border-top: 1px solid rgba(0, 51, 102, 0.1);
+  margin: 0.75rem 0;
+}
+
+/* Animazioni per i dropdown */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInDown {
+  animation: fadeInDown 0.3s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* Stile per i radio button */
+.form-check-input {
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  background-color: #00a0e3;
+  border-color: #00a0e3;
+}
+
+.form-check-label {
+  cursor: pointer;
+}
+
+/* Stile per gli alert nei dropdown */
+.login-dropdown-menu .alert,
+.register-dropdown-menu .alert {
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+/* Effetto hover per i link dei dropdown */
+.login-dropdown .nav-link-modern,
+.register-dropdown .nav-link-modern {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.login-dropdown .nav-link-modern:hover,
+.register-dropdown .nav-link-modern:hover {
+  color: #00a0e3;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dropdown-menu-custom {
+    width: 100%;
+    position: fixed;
+    top: 60px;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    margin-top: 0;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+}
