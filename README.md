@@ -43,11 +43,6 @@ Creata una pagina dedicata con 3 sezioni principali:
 ## Considerazioni finali
 > Questa versione è incentrata sulla User Experience e sulla valorizzazione visiva dei contenuti, migliorando estetica, navigazione e interazione dell’utente.
 
----
-Vuoi che ti preparo:
-- questo testo in markdown pronto da incollare nel tuo README?
-- oppure come descrizione ufficiale della Release 7.0 su GitHub?
-- oppure file `CHANGELOG.md` pulito?
 
 ## 📋 Panoramica
 
