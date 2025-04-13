@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faEnvelope, faUserPlus, faUserGraduate, faChalkboardTeacher } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faEnvelope, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 import { Formik } from 'formik';
@@ -32,10 +32,8 @@ const RegisterDropdown = () => {
       .min(6, 'La password deve contenere almeno 6 caratteri'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Le password non corrispondono')
-      .required('Conferma la password'),
-    role: Yup.string()
-      .required('Seleziona il tuo ruolo')
-      .oneOf(['student', 'teacher'], 'Seleziona un ruolo valido')
+      .required('Conferma la password')
+    // Rimossa la validazione del ruolo
   });
 
   // Gestione dell'invio del form
@@ -74,6 +72,9 @@ const RegisterDropdown = () => {
   // Gestione del click sul link "Registrati"
   const handleRegisterClick = (e) => {
     e.preventDefault();
+    // Prima di cambiare lo stato del dropdown corrente, invia un evento per chiudere tutti gli altri
+    const closeEvent = new CustomEvent('CLOSE_ALL_DROPDOWNS', { detail: { except: 'register' } });
+    window.dispatchEvent(closeEvent);
     setShowDropdown(!showDropdown);
   };
 
@@ -109,6 +110,21 @@ const RegisterDropdown = () => {
     };
   }, []);
 
+  // Ascolta l'evento per chiudere tutti i dropdown tranne quello specificato
+  useEffect(() => {
+    const handleCloseAllDropdowns = (e) => {
+      if (e.detail.except !== 'register') {
+        setShowDropdown(false);
+      }
+    };
+    
+    window.addEventListener('CLOSE_ALL_DROPDOWNS', handleCloseAllDropdowns);
+    
+    return () => {
+      window.removeEventListener('CLOSE_ALL_DROPDOWNS', handleCloseAllDropdowns);
+    };
+  }, []);
+
   return (
     <div className="register-dropdown">
       <a 
@@ -141,7 +157,7 @@ const RegisterDropdown = () => {
               email: '',
               password: '',
               confirmPassword: '',
-              role: 'student'
+              role: 'student' // Manteniamo il valore predefinito ma non lo mostriamo all'utente
             }}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
@@ -219,7 +235,7 @@ const RegisterDropdown = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
                 
-                <Form.Group className="mb-2">
+                <Form.Group className="mb-3">
                   <Form.Label className="small">
                     <FontAwesomeIcon icon={faLock} className="me-2" />
                     Conferma Password
@@ -240,51 +256,7 @@ const RegisterDropdown = () => {
                   </Form.Control.Feedback>
                 </Form.Group>
                 
-                <Form.Group className="mb-3">
-                  <Form.Label className="small">
-                    <FontAwesomeIcon icon={faUserGraduate} className="me-2" />
-                    Ruolo
-                  </Form.Label>
-                  <div className="d-flex">
-                    <div className="form-check me-3">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        id="roleStudent"
-                        value="student"
-                        checked={values.role === 'student'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      <label className="form-check-label small" htmlFor="roleStudent">
-                        <FontAwesomeIcon icon={faUserGraduate} className="me-1" />
-                        Studente
-                      </label>
-                    </div>
-                    <div className="form-check">
-                      <input
-                        className="form-check-input"
-                        type="radio"
-                        name="role"
-                        id="roleTeacher"
-                        value="teacher"
-                        checked={values.role === 'teacher'}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
-                      />
-                      <label className="form-check-label small" htmlFor="roleTeacher">
-                        <FontAwesomeIcon icon={faChalkboardTeacher} className="me-1" />
-                        Insegnante
-                      </label>
-                    </div>
-                  </div>
-                  {touched.role && errors.role && (
-                    <div className="text-danger mt-1">
-                      <small>{errors.role}</small>
-                    </div>
-                  )}
-                </Form.Group>
+                {/* Rimosso il Form.Group per la selezione del ruolo */}
                 
                 <div className="d-grid">
                   <Button 

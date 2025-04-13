@@ -7,9 +7,51 @@
   <img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License">
 </div>
 
+
+
+## 🆕 Novità Versione 7.0
+
+### Homepage - Migliorie grafiche e funzionali
+- Implementazione di un carosello di immagini con scorrimento automatico
+- Overlay blu trasparente sulle immagini del carosello
+- Rimozione dei pulsanti di navigazione laterali
+- Pulsanti principali resi trasparenti al 70%
+- Miglioramento del titolo dell’università:
+  - Aumento dimensioni
+  - Animazioni ed effetti visivi
+  - Migliore leggibilità grazie ad ombreggiatura
+
+### Nuova pagina: Informazioni sull’Università
+Creata una pagina dedicata con 3 sezioni principali:
+
+#### → Storia
+- Video YouTube integrato
+- Timeline interattiva per evidenziare gli eventi più importanti
+
+#### → Sedi
+- Scorrimento orizzontale per visualizzare le sedi universitarie
+- Immagini dedicate per ogni sede
+- Mappa interattiva con marker per la posizione di ogni sede
+
+#### → Corsi
+- Organizzazione dei corsi per sede universitaria
+- Scorrimento orizzontale dei corsi per una migliore esperienza utente
+- Rimozione dei link ridondanti per una navigazione più pulita
+
+---
+
+## Considerazioni finali
+> Questa versione è incentrata sulla User Experience e sulla valorizzazione visiva dei contenuti, migliorando estetica, navigazione e interazione dell’utente.
+
+---
+Vuoi che ti preparo:
+- questo testo in markdown pronto da incollare nel tuo README?
+- oppure come descrizione ufficiale della Release 7.0 su GitHub?
+- oppure file `CHANGELOG.md` pulito?
+
 ## 📋 Panoramica
 
-ESSE3 è un sistema completo di gestione della segreteria studenti che offre funzionalità di registrazione, autenticazione e gestione delle matricole. Il sistema è progettato con un'architettura moderna che separa frontend e backend, garantendo scalabilità e manutenibilità.
+UniparthenopeHub è un sistema completo di gestione della segreteria studenti che offre funzionalità di registrazione, autenticazione e gestione delle matricole. Il sistema è progettato con un'architettura moderna che separa frontend e backend, garantendo scalabilità e manutenibilità.
 
 ### 🔍 Caratteristiche Principali
 
