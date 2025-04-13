@@ -1,3 +1,6 @@
+/* Importa gli stili di App.css */
+@import './App.css';
+
 /* Stili di base */
 body {
   margin: 0;
@@ -10,6 +13,3 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
-/* Importa gli stili di App.css */
-@import './App.css';

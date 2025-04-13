@@ -1,134 +1,176 @@
-# ESSE3 Portal - Sistema di Segreteria Studenti
+# ESSE3 - Sistema di Segreteria Studenti
 
-Questo documento descrive le modifiche apportate al progetto ESSE3 per risolvere i problemi di connessione al database e migliorare l'interfaccia utente.
+<div align="center">
+  <img src="https://img.shields.io/badge/node.js-v14+-green.svg" alt="Node.js Version">
+  <img src="https://img.shields.io/badge/react-latest-blue.svg" alt="React Version">
+  <img src="https://img.shields.io/badge/mongodb-atlas-success.svg" alt="MongoDB">
+  <img src="https://img.shields.io/badge/license-MIT-yellow.svg" alt="License">
+</div>
 
-## Problemi risolti
+## 📋 Panoramica
 
-### 1. Problema di timeout nel login
-Il problema principale segnalato era:
+ESSE3 è un sistema completo di gestione della segreteria studenti che offre funzionalità di registrazione, autenticazione e gestione delle matricole. Il sistema è progettato con un'architettura moderna che separa frontend e backend, garantendo scalabilità e manutenibilità.
+
+### 🔍 Caratteristiche Principali
+
+- **Sistema di autenticazione avanzato** con JWT e refresh token
+- **Gestione completa degli utenti** con ruoli differenziati (Studenti, Admin, SuperAdmin)
+- **Processo di registrazione studenti** con approvazione amministrativa
+- **Assegnazione automatica delle matricole** nel formato standardizzato (0124XXXXXX)
+- **Interfaccia utente moderna e reattiva** ottimizzata per tutti i dispositivi
+- **API RESTful** per l'integrazione con altri sistemi
+
+## 🚀 Tecnologie Utilizzate
+
+### Backend
+- **Node.js** e **Express** per il server API
+- **MongoDB** con **Mongoose** per la persistenza dei dati
+- **JWT** per l'autenticazione sicura
+- **bcrypt** per la crittografia delle password
+
+### Frontend
+- **React** con Hooks per l'interfaccia utente
+- **React Router** per la navigazione
+- **Bootstrap** per il layout responsive
+- **Formik** e **Yup** per la validazione dei form
+- **Axios** per le richieste HTTP
+- **FontAwesome** per le icone
+
+## 🏗️ Architettura del Progetto
+
 ```
-Errore durante il login: Operation `users.findOne()` buffering timed out after 10000ms
+esse3/
+├── backend/               # Server API Node.js
+│   ├── config/            # Configurazione del database e dell'app
+│   ├── controllers/       # Logica di business
+│   ├── middleware/        # Middleware per auth e autorizzazione
+│   ├── models/            # Modelli dei dati Mongoose
+│   ├── routes/            # Definizione delle rotte API
+│   └── server.js          # Entry point del server
+│
+├── frontend/              # Applicazione React
+│   ├── src/
+│   │   ├── components/    # Componenti riutilizzabili
+│   │   ├── pages/         # Pagine dell'applicazione
+│   │   ├── styles/        # Fogli di stile CSS
+│   │   ├── utils/         # Utility e contesto di autenticazione
+│   │   ├── App.jsx        # Componente principale
+│   │   └── main.jsx       # Entry point React
+│   └── index.html         # Template HTML
+│
+├── start.sh               # Script di avvio dell'applicazione
+└── test_functionality.sh  # Script per testare le funzionalità
 ```
 
-Questo errore è stato risolto modificando la configurazione di connessione a MongoDB:
-- Aumentato il timeout di selezione del server da 5000ms a 30000ms
-- Implementato un sistema di gestione degli errori più robusto
-- Configurato correttamente la connessione a MongoDB Atlas
-
-### 2. Interfaccia utente migliorata
-L'interfaccia utente è stata completamente ridisegnata con:
-- Stile moderno con sfumature di blu e bianco
-- Animazioni ed effetti di transizione
-- Layout responsive per tutti i dispositivi
-- Effetti di hover e feedback visivo per le interazioni
-
-### 3. Sistema di registrazione e matricole
-È stato implementato un sistema completo per:
-- Registrazione degli studenti
-- Approvazione degli studenti da parte degli amministratori
-- Assegnazione di matricole nel formato richiesto (0124XXXXXX)
-
-## Struttura del progetto
-
-Il progetto è organizzato in due parti principali:
-
-### Backend (Node.js + Express + MongoDB)
-- `/backend`: API RESTful per la gestione degli utenti e delle matricole
-  - `/config`: Configurazione del database e dell'applicazione
-  - `/controllers`: Logica di business
-  - `/middleware`: Middleware per autenticazione e autorizzazione
-  - `/models`: Modelli dei dati
-  - `/routes`: Definizione delle rotte API
-
-### Frontend (React + Bootstrap)
-- `/frontend`: Interfaccia utente
-  - `/src/components`: Componenti riutilizzabili
-  - `/src/pages`: Pagine dell'applicazione
-  - `/src/styles`: Fogli di stile CSS
-  - `/src/utils`: Utility e contesto di autenticazione
-
-## Istruzioni per l'installazione
+## 🔧 Installazione e Configurazione
 
 ### Prerequisiti
 - Node.js (v14 o superiore)
 - MongoDB (locale o Atlas)
+- npm o yarn
 
-### Configurazione
-1. Clona il repository
-2. Configura i file `.env` in entrambe le directory:
+### Passaggi per l'Installazione
 
-Per il backend (`.env` nella cartella `backend`):
-```
-NODE_ENV=development
-PORT=3010
-MONGODB_URI=mongodb+srv://esse3admin:esse3password@esse3cluster.mongodb.net/esse3-portal
-JWT_SECRET=esse3-secure-jwt-secret-key-2025
-JWT_EXPIRE=30d
-JWT_REFRESH_SECRET=esse3-secure-refresh-token-key-2025
-JWT_REFRESH_EXPIRE=7d
-CORS_ORIGIN=http://localhost:3000
-```
+1. **Clona il repository**
+   ```bash
+   git clone https://github.com/NicolaSalvati/Esse3.git
+   cd Esse3
+   ```
 
-Per il frontend (`.env` nella cartella `frontend`):
-```
-VITE_API_URL=http://localhost:3010/api/v1
-```
+2. **Configura le variabili d'ambiente**
 
-### Avvio
-Usa lo script di avvio incluso:
-```
-./start.sh
-```
+   Per il backend (crea `.env` nella cartella `backend`):
+   ```
+   NODE_ENV=development
+   PORT=3010
+   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/esse3-portal
+   JWT_SECRET=your-jwt-secret-key
+   JWT_EXPIRE=30d
+   JWT_REFRESH_SECRET=your-refresh-token-key
+   JWT_REFRESH_EXPIRE=7d
+   CORS_ORIGIN=http://localhost:3000
+   ```
 
-Oppure avvia manualmente:
-1. Backend:
-```
-cd backend
-npm install
-npm start
-```
+   Per il frontend (crea `.env` nella cartella `frontend`):
+   ```
+   VITE_API_URL=http://localhost:3010/api/v1
+   ```
 
-2. Frontend:
-```
-cd frontend
-npm install
-npm run dev
-```
+3. **Avvia l'applicazione**
 
-## Utilizzo
+   Utilizzando lo script di avvio:
+   ```bash
+   ./start.sh
+   ```
 
-### Accesso
-- Studenti: Registrazione e attesa di approvazione
-- Admin: Gestione degli studenti e assegnazione matricole
-- SuperAdmin: Gestione completa del sistema
+   Oppure manualmente:
+   ```bash
+   # Avvia il backend
+   cd backend
+   npm install
+   npm start
+   
+   # In un altro terminale, avvia il frontend
+   cd frontend
+   npm install
+   npm run dev
+   ```
 
-### Flusso di registrazione studenti
-1. Lo studente si registra tramite la pagina di registrazione
-2. L'amministratore approva lo studente e assegna una matricola
-3. Lo studente può accedere con la matricola assegnata
+## 🖥️ Utilizzo
 
-## Tecnologie utilizzate
+### Accesso al Sistema
 
-### Backend
-- Node.js e Express
-- MongoDB con Mongoose
-- JWT per l'autenticazione
-- bcrypt per la crittografia delle password
+- **Studenti**: Registrazione tramite form e attesa di approvazione
+- **Admin**: Gestione degli studenti e assegnazione matricole
+- **SuperAdmin**: Gestione completa del sistema e degli amministratori
 
-### Frontend
-- React con Hooks
-- React Router per la navigazione
-- Bootstrap per il layout responsive
-- Formik e Yup per la validazione dei form
-- Axios per le richieste HTTP
-- FontAwesome per le icone
+### Flusso di Registrazione Studenti
 
-## Test
+1. Lo studente compila il form di registrazione
+2. L'amministratore riceve la richiesta e la approva
+3. Il sistema assegna automaticamente una matricola nel formato corretto
+4. Lo studente riceve notifica e può accedere con le proprie credenziali
 
-Per verificare che tutto funzioni correttamente:
-```
+## 🧪 Test
+
+Per verificare il corretto funzionamento dell'applicazione:
+
+```bash
 ./test_functionality.sh
 ```
 
-## Crediti
+Questo script esegue una serie di test automatizzati per verificare:
+- Connessione al database
+- Registrazione e autenticazione
+- Assegnazione delle matricole
+- Funzionalità di amministrazione
+
+## 🛠️ Problemi Risolti
+
+### Connessione al Database
+- Risolto il problema di timeout durante il login
+- Aumentato il timeout di selezione del server da 5000ms a 30000ms
+- Implementato un sistema di gestione degli errori più robusto
+
+### Interfaccia Utente
+- Completamente ridisegnata con un tema moderno
+- Migliorata la reattività su tutti i dispositivi
+- Aggiunti effetti di transizione e feedback visivo
+
+## 📝 Licenza
+
+Questo progetto è rilasciato sotto licenza MIT. Vedi il file `LICENSE` per maggiori dettagli.
+
+## 👥 Contributi
+
+Le contribuzioni sono benvenute! Per favore, sentiti libero di inviare una pull request o aprire un issue per miglioramenti o correzioni.
+
+## 📞 Contatti
+
 Progetto sviluppato per il corso di Ingegneria del Software.
+
+---
+
+<div align="center">
+  <sub>Fatto con ❤️ da Nicola Salvati</sub>
+</div>

@@ -1,341 +1,401 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap, faUniversity, faBookOpen, faUserGraduate, faChalkboardTeacher, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faGraduationCap, faUniversity, faBookOpen, faUserGraduate, 
+  faChalkboardTeacher, faCalendarAlt, faArrowRight, faArrowLeft,
+  faMapMarkerAlt, faPhone, faEnvelope, faGlobe, faBuilding,
+  faChevronRight, faUsers, faAward, faSchool, faClock,
+  faBrain, faFlask, faLaptopCode, faHandshake
+} from '@fortawesome/free-solid-svg-icons';
+import UniversityStatistics from '../components/UniversityStatistics';
 import { Link } from 'react-router-dom';
+import '../styles/ModernHome.css';
+import '../styles/CustomStyles.css';
+import '../styles/EnhancedAnimations.css';
 
+// Componente per le stelle scintillanti
+const StarryBackground = () => {
+  const [stars, setStars] = useState([]);
+  
+  useEffect(() => {
+    const generateStars = () => {
+      const newStars = [];
+      const starCount = 50;
+      
+      for (let i = 0; i < starCount; i++) {
+        newStars.push({
+          id: i,
+          left: `${Math.random() * 100}%`,
+          top: `${Math.random() * 100}%`,
+          size: `${Math.random() * 3 + 1}px`,
+          duration: `${Math.random() * 3 + 2}s`,
+          delay: `${Math.random() * 2}s`
+        });
+      }
+      
+      setStars(newStars);
+    };
+    
+    generateStars();
+  }, []);
+  
+  return (
+    <div className="hero-stars">
+      {stars.map(star => (
+        <div 
+          key={star.id}
+          className="star"
+          style={{
+            left: star.left,
+            top: star.top,
+            width: star.size,
+            height: star.size,
+            animationDuration: star.duration,
+            animationDelay: star.delay,
+            '--duration': star.duration
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+// Componente principale della homepage
 const HomePage = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [visibleElements, setVisibleElements] = useState({});
+  const heroRef = useRef(null);
+  
+  // Effetto per rilevare lo scroll e aggiornare la navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Effetto per le animazioni di scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setVisibleElements(prev => ({
+              ...prev,
+              [entry.target.id]: true
+            }));
+            
+            // Aggiungi classe di animazione
+            if (entry.target.classList.contains('animate-element')) {
+              entry.target.classList.add('animate-fadeIn');
+            }
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    const elements = document.querySelectorAll('.scroll-reveal, .animate-element');
+    elements.forEach(el => observer.observe(el));
+
+    return () => {
+      elements.forEach(el => observer.unobserve(el));
+    };
+  }, []);
+
+  // Effetto per le animazioni della hero section
+  useEffect(() => {
+    if (heroRef.current) {
+      const heroElements = heroRef.current.querySelectorAll('.animate-element');
+      heroElements.forEach((el, index) => {
+        el.style.animationDelay = `${0.3 * (index + 1)}s`;
+        el.classList.add('animate-fadeIn');
+      });
+      
+      // Crea stelle scintillanti
+      const createStars = () => {
+        const starsContainer = document.createElement('div');
+        starsContainer.className = 'hero-stars';
+        
+        for (let i = 0; i < 50; i++) {
+          const star = document.createElement('div');
+          star.className = 'star';
+          star.style.left = `${Math.random() * 100}%`;
+          star.style.top = `${Math.random() * 100}%`;
+          star.style.width = `${Math.random() * 3 + 1}px`;
+          star.style.height = star.style.width;
+          star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+          star.style.animationDelay = `${Math.random() * 2}s`;
+          star.style.setProperty('--duration', star.style.animationDuration);
+          
+          starsContainer.appendChild(star);
+        }
+        
+        heroRef.current.appendChild(starsContainer);
+      };
+      
+      createStars();
+    }
+  }, []);
+
+  // Dati di esempio per le notizie
+  const newsData = [
+    {
+      title: "Bando per la selezione di collaborazioni part-time A.A. 2023/2024",
+      excerpt: "IX° avviso di convocazione per la selezione di collaborazioni part-time per l'anno accademico 2023/2024.",
+      date: "11 Aprile 2025",
+      image: "https://via.placeholder.com/600x400/003366/ffffff?text=Bando+Part-Time",
+      link: "/news/1"
+    },
+    {
+      title: "Elezioni RSU del 14-15 e 16 aprile 2025",
+      excerpt: "Si terranno nei giorni 14, 15 e 16 aprile 2025 le elezioni per il rinnovo delle Rappresentanze Sindacali Unitarie.",
+      date: "9 Aprile 2025",
+      image: "https://via.placeholder.com/600x400/003366/ffffff?text=Elezioni+RSU",
+      link: "/news/2"
+    },
+    {
+      title: "Apertura Immatricolazioni A.A. 2025/2026",
+      excerpt: "Sono aperte le immatricolazioni per l'anno accademico 2025/2026. Scopri la nostra offerta formativa.",
+      date: "1 Aprile 2025",
+      image: "https://via.placeholder.com/600x400/003366/ffffff?text=Immatricolazioni",
+      link: "/news/3"
+    }
+  ];
+
+  // Dati per i servizi rapidi
+  const quickServices = [
+    {
+      icon: faCalendarAlt,
+      title: "Calendario Esami",
+      description: "Consulta il calendario degli esami e prenota il tuo appello",
+      link: "/calendario-esami"
+    },
+    {
+      icon: faBookOpen,
+      title: "Offerta Formativa",
+      description: "Esplora i corsi di laurea e l'offerta formativa completa",
+      link: "/offerta-formativa"
+    },
+    {
+      icon: faUsers,
+      title: "Orientamento",
+      description: "Servizi di orientamento per le future matricole",
+      link: "/orientamento"
+    },
+    {
+      icon: faAward,
+      title: "Borse di Studio",
+      description: "Informazioni su borse di studio e agevolazioni",
+      link: "/borse-di-studio"
+    },
+    {
+      icon: faSchool,
+      title: "Segreteria",
+      description: "Contatta la segreteria studenti per informazioni",
+      link: "/segreteria"
+    },
+    {
+      icon: faGlobe,
+      title: "Mobilità Internazionale",
+      description: "Scopri le opportunità di studio all'estero e i programmi di scambio",
+      link: "/mobilita"
+    },
+    {
+      icon: faUserGraduate,
+      title: "Career Service",
+      description: "Trova stage, tirocini e opportunità di lavoro per il tuo futuro professionale",
+      link: "/career"
+    },
+    {
+      icon: faUniversity,
+      title: "Biblioteca Digitale",
+      description: "Accedi a migliaia di risorse digitali, e-book, riviste e articoli scientifici",
+      link: "/biblioteca"
+    }
+  ];
+
   return (
-    <div className="home-page">
-      {/* Hero Section */}
-      <section className="hero-section">
+    <div className="modern-home">
+      {/* Hero Section con animazioni avanzate - Rimossa hero-wave come richiesto */}
+      <section className="hero-section-animated" ref={heroRef}>
+        <div className="hero-particles"></div>
+        <StarryBackground />
         <Container>
-          <Row className="align-items-center">
-            <Col lg={7} className="hero-content animate-fadeInLeft">
-              <h1 className="hero-title mb-4">Benvenuto su UniparthenopeHub</h1>
-              <p className="hero-subtitle mb-4">
-                Il portale ufficiale dell'Università Parthenope di Napoli per la gestione delle immatricolazioni e dei servizi agli studenti.
+          <div className="row align-items-center">
+            <div className="col-lg-7 hero-content">
+              <h1 className="hero-title animate-element">
+                <span className="text-highlight">Benvenuto</span> all'Università Parthenope
+              </h1>
+              <p className="hero-subtitle animate-element">
+                Un'istituzione accademica d'eccellenza con una lunga tradizione nell'istruzione superiore, 
+                focalizzata sulla ricerca e sulla formazione di qualità.
               </p>
-              <div className="d-flex flex-wrap gap-3">
-                <Button as={Link} to="/immatricolazione" variant="light" size="lg" className="glass-btn">
-                  <FontAwesomeIcon icon={faUserGraduate} className="me-2" />
-                  Immatricolazione
-                </Button>
-                <Button as={Link} to="/login" variant="outline-light" size="lg" className="glass-btn">
-                  Accedi
-                </Button>
+              <div className="hero-features animate-element">
+                <div className="hero-feature">
+                  <div className="hero-feature-icon">
+                    <FontAwesomeIcon icon={faUserGraduate} />
+                  </div>
+                  <div className="hero-feature-text">Eccellenza Accademica</div>
+                </div>
+                <div className="hero-feature">
+                  <div className="hero-feature-icon">
+                    <FontAwesomeIcon icon={faGlobe} />
+                  </div>
+                  <div className="hero-feature-text">Prospettiva Internazionale</div>
+                </div>
+                <div className="hero-feature">
+                  <div className="hero-feature-icon">
+                    <FontAwesomeIcon icon={faChalkboardTeacher} />
+                  </div>
+                  <div className="hero-feature-text">Docenti Qualificati</div>
+                </div>
               </div>
-            </Col>
-            <Col lg={5} className="d-none d-lg-block animate-fadeInRight">
-              <img src="/assets/images/university-illustration.svg" alt="Università Parthenope" className="img-fluid" />
-            </Col>
-          </Row>
+              <div className="hero-buttons animate-element">
+                <a href="/offerta-formativa" className="btn btn-primary-modern me-3">
+                  Scopri i Corsi
+                </a>
+                <a href="/about" className="btn btn-outline-modern">
+                  Chi Siamo
+                </a>
+              </div>
+            </div>
+            <div className="col-lg-5 d-none d-lg-block hero-image animate-element">
+              <div className="hero-image-container">
+                <img 
+                  src="https://via.placeholder.com/600x400/003366/ffffff?text=Università+Parthenope" 
+                  alt="Università Parthenope" 
+                  className="img-fluid rounded shadow-lg"
+                />
+                <div className="hero-image-decoration"></div>
+              </div>
+            </div>
+          </div>
         </Container>
       </section>
 
-      {/* Annunci Section */}
-      <section className="py-5">
+      {/* Accesso Rapido ai Servizi con animazioni avanzate */}
+      <section className="quick-access py-5">
+        <Container>
+          <h2 className="text-center section-title mb-5">Accesso Rapido ai Servizi</h2>
+          <div className="services-grid">
+            {quickServices.map((service, index) => (
+              <div className="service-card-enhanced" key={index}>
+                <div className="service-icon-container">
+                  <FontAwesomeIcon icon={service.icon} className="service-icon-enhanced" />
+                </div>
+                <h3 className="service-title-enhanced">{service.title}</h3>
+                <p className="service-description-enhanced">
+                  {service.description}
+                </p>
+                <Link to={service.link} className="service-link-enhanced">
+                  Scopri di più <FontAwesomeIcon icon={faArrowRight} className="service-link-icon ms-1" />
+                </Link>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Offerta Formativa con animazioni avanzate */}
+      <section className="courses-section py-5">
         <Container>
           <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold text-primary">
-              <FontAwesomeIcon icon={faCalendarAlt} className="me-3" />
-              Annunci
-            </h2>
-            <p className="lead text-muted">Ultime novità e comunicazioni importanti</p>
+            <h2 className="section-title">Offerta Formativa</h2>
+            <p className="lead text-muted">
+              Scopri i percorsi formativi offerti dall'Università Parthenope per costruire il tuo futuro accademico e professionale.
+            </p>
           </div>
           
-          <Row>
-            <Col md={4} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body>
-                  <h5 className="card-title fw-bold">Apertura Immatricolazioni A.A. 2025/2026</h5>
-                  <p className="card-text">
-                    Sono aperte le immatricolazioni per l'anno accademico 2025/2026. Scopri la nostra offerta formativa e inizia il tuo percorso universitario.
-                  </p>
-                  <div className="text-end">
-                    <Button as={Link} to="/immatricolazione" variant="primary" className="glass-btn">
-                      Immatricolati ora
-                    </Button>
+          <div className="courses-preview">
+            <div className="row">
+              <div className="col-md-6 col-lg-3 mb-4">
+                <div className="course-preview-card-enhanced">
+                  <div className="course-preview-icon-container">
+                    <FontAwesomeIcon icon={faGraduationCap} className="course-preview-icon-enhanced" />
                   </div>
-                </Card.Body>
-                <Card.Footer className="text-muted">
-                  Pubblicato: 01/04/2025
-                </Card.Footer>
-              </Card>
-            </Col>
-            
-            <Col md={4} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body>
-                  <h5 className="card-title fw-bold">Nuovi Corsi di Laurea</h5>
-                  <p className="card-text">
-                    L'Università Parthenope amplia la sua offerta formativa con nuovi corsi di laurea in Intelligenza Artificiale e Scienze Ambientali Marine.
-                  </p>
-                  <div className="text-end">
-                    <Button as={Link} to="/offerta-formativa" variant="primary" className="glass-btn">
-                      Scopri di più
-                    </Button>
+                  <h3 className="course-preview-title-enhanced">Lauree Triennali</h3>
+                  <p className="course-preview-count-enhanced">25 corsi disponibili</p>
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-4">
+                <div className="course-preview-card-enhanced">
+                  <div className="course-preview-icon-container">
+                    <FontAwesomeIcon icon={faUniversity} className="course-preview-icon-enhanced" />
                   </div>
-                </Card.Body>
-                <Card.Footer className="text-muted">
-                  Pubblicato: 15/03/2025
-                </Card.Footer>
-              </Card>
-            </Col>
-            
-            <Col md={4} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body>
-                  <h5 className="card-title fw-bold">Borse di Studio 2025</h5>
-                  <p className="card-text">
-                    Sono disponibili nuove borse di studio per merito e per reddito. Verifica i requisiti e presenta la tua domanda entro il 30 maggio.
-                  </p>
-                  <div className="text-end">
-                    <Button as={Link} to="/borse-di-studio" variant="primary" className="glass-btn">
-                      Verifica requisiti
-                    </Button>
+                  <h3 className="course-preview-title-enhanced">Lauree Magistrali</h3>
+                  <p className="course-preview-count-enhanced">18 corsi disponibili</p>
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-4">
+                <div className="course-preview-card-enhanced">
+                  <div className="course-preview-icon-container">
+                    <FontAwesomeIcon icon={faBookOpen} className="course-preview-icon-enhanced" />
                   </div>
-                </Card.Body>
-                <Card.Footer className="text-muted">
-                  Pubblicato: 20/02/2025
-                </Card.Footer>
-              </Card>
-            </Col>
-          </Row>
+                  <h3 className="course-preview-title-enhanced">Master</h3>
+                  <p className="course-preview-count-enhanced">12 corsi disponibili</p>
+                </div>
+              </div>
+              <div className="col-md-6 col-lg-3 mb-4">
+                <div className="course-preview-card-enhanced">
+                  <div className="course-preview-icon-container">
+                    <FontAwesomeIcon icon={faAward} className="course-preview-icon-enhanced" />
+                  </div>
+                  <h3 className="course-preview-title-enhanced">Dottorati</h3>
+                  <p className="course-preview-count-enhanced">8 corsi disponibili</p>
+                </div>
+              </div>
+            </div>
+            <div className="courses-button-container text-center mt-4">
+              <Link to="/offerta-formativa" className="btn-courses-enhanced">
+                Esplora Tutti i Corsi <FontAwesomeIcon icon={faArrowRight} className="btn-courses-icon ms-2" />
+              </Link>
+            </div>
+          </div>
         </Container>
       </section>
 
-      {/* Offerta Formativa Section */}
-      <section className="py-5 bg-light">
+      {/* Statistiche Università */}
+      <UniversityStatistics />
+
+      {/* Eventi in Evidenza con animazioni avanzate */}
+      <section className="events-section-enhanced">
         <Container>
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold text-primary">
-              <FontAwesomeIcon icon={faBookOpen} className="me-3" />
-              Offerta Formativa
-            </h2>
-            <p className="lead text-muted">Scopri i nostri corsi di laurea</p>
+          <div className="events-header">
+            <h2 className="events-title">Eventi in Evidenza</h2>
+            <p className="events-subtitle">
+              Scopri gli eventi più importanti organizzati dall'Università Parthenope.
+            </p>
           </div>
           
-          <Row>
-            <Col lg={4} md={6} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Header className="bg-primary text-white">
-                  <h5 className="mb-0">Facoltà di Scienze</h5>
-                </Card.Header>
-                <Card.Body>
-                  <ul className="list-unstyled">
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Informatica
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Scienze Biologiche
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Intelligenza Artificiale
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Scienze Ambientali
-                    </li>
-                  </ul>
-                </Card.Body>
-                <Card.Footer>
-                  <Button as={Link} to="/facolta/scienze" variant="primary" className="glass-btn w-100">
-                    Esplora Facoltà
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-            
-            <Col lg={4} md={6} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Header className="bg-primary text-white">
-                  <h5 className="mb-0">Facoltà di Economia</h5>
-                </Card.Header>
-                <Card.Body>
-                  <ul className="list-unstyled">
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Economia Aziendale
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Economia e Commercio
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Management
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Finanza e Mercati
-                    </li>
-                  </ul>
-                </Card.Body>
-                <Card.Footer>
-                  <Button as={Link} to="/facolta/economia" variant="primary" className="glass-btn w-100">
-                    Esplora Facoltà
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-            
-            <Col lg={4} md={6} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Header className="bg-primary text-white">
-                  <h5 className="mb-0">Facoltà di Ingegneria</h5>
-                </Card.Header>
-                <Card.Body>
-                  <ul className="list-unstyled">
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Ingegneria Informatica
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Ingegneria Civile
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Ingegneria Gestionale
-                    </li>
-                    <li className="mb-2">
-                      <FontAwesomeIcon icon={faGraduationCap} className="me-2 text-primary" />
-                      Ingegneria Navale
-                    </li>
-                  </ul>
-                </Card.Body>
-                <Card.Footer>
-                  <Button as={Link} to="/facolta/ingegneria" variant="primary" className="glass-btn w-100">
-                    Esplora Facoltà
-                  </Button>
-                </Card.Footer>
-              </Card>
-            </Col>
-          </Row>
-        </Container>
-      </section>
-
-      {/* Info Università Section */}
-      <section className="university-info-section py-5">
-        <Container>
-          <div className="text-center mb-5">
-            <h2 className="display-5 fw-bold text-primary">
-              <FontAwesomeIcon icon={faUniversity} className="me-3" />
-              Università Parthenope
-            </h2>
-            <p className="lead text-muted">Eccellenza nella formazione dal 1919</p>
-          </div>
-          
-          <Row>
-            <Col md={6} lg={3} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body className="text-center p-4">
-                  <div className="university-info-icon mb-3">
-                    <FontAwesomeIcon icon={faUniversity} size="3x" />
+          <div className="events-preview">
+            <div className="row">
+              {newsData.slice(0, 3).map((event, index) => (
+                <div className="col-md-4 mb-4" key={index}>
+                  <div className="event-preview-card-enhanced">
+                    <div className="event-preview-image-enhanced">
+                      <img src={event.image} alt={event.title} />
+                      <div className="event-preview-date-enhanced">{event.date}</div>
+                    </div>
+                    <div className="event-preview-content-enhanced">
+                      <h3 className="event-preview-title-enhanced">{event.title}</h3>
+                      <p className="event-preview-excerpt-enhanced">{event.excerpt}</p>
+                    </div>
                   </div>
-                  <h5 className="card-title">Sedi</h5>
-                  <p className="card-text">
-                    Sede centrale: Via Acton, 38<br />
-                    Sede di Ingegneria: Centro Direzionale<br />
-                    Sede di Economia: Via Generale Parisi
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-            
-            <Col md={6} lg={3} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body className="text-center p-4">
-                  <div className="university-info-icon mb-3">
-                    <FontAwesomeIcon icon={faUserGraduate} size="3x" />
-                  </div>
-                  <h5 className="card-title">Studenti</h5>
-                  <p className="card-text">
-                    Oltre 16.000 studenti<br />
-                    Più di 3.000 laureati all'anno<br />
-                    Tasso di occupazione: 85%
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-            
-            <Col md={6} lg={3} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body className="text-center p-4">
-                  <div className="university-info-icon mb-3">
-                    <FontAwesomeIcon icon={faChalkboardTeacher} size="3x" />
-                  </div>
-                  <h5 className="card-title">Docenti</h5>
-                  <p className="card-text">
-                    Oltre 300 docenti<br />
-                    Rapporto docenti/studenti: 1:25<br />
-                    Professori di fama internazionale
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-            
-            <Col md={6} lg={3} className="mb-4">
-              <Card className="glass-card-blue shadow-sm h-100 hover-lift">
-                <Card.Body className="text-center p-4">
-                  <div className="university-info-icon mb-3">
-                    <FontAwesomeIcon icon={faBookOpen} size="3x" />
-                  </div>
-                  <h5 className="card-title">Offerta Formativa</h5>
-                  <p className="card-text">
-                    25 Corsi di Laurea Triennale<br />
-                    18 Corsi di Laurea Magistrale<br />
-                    12 Master e 5 Dottorati di Ricerca
-                  </p>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-          
-          <div className="text-center mt-4">
-            <Button as={Link} to="/about" variant="primary" size="lg" className="glass-btn">
-              Scopri di più sull'Università
-            </Button>
+                </div>
+              ))}
+            </div>
+            <div className="events-button-container">
+              <Link to="/eventi" className="btn-events-enhanced">
+                Tutti gli Eventi <FontAwesomeIcon icon={faArrowRight} className="btn-events-icon ms-2" />
+              </Link>
+            </div>
           </div>
         </Container>
       </section>
-    </div>
-  );
-};
-
-// Aggiungo il componente Card che manca nell'import
-const Card = ({ children, className, ...props }) => {
-  return (
-    <div className={`card ${className || ''}`} {...props}>
-      {children}
-    </div>
-  );
-};
-
-Card.Body = ({ children, className, ...props }) => {
-  return (
-    <div className={`card-body ${className || ''}`} {...props}>
-      {children}
-    </div>
-  );
-};
-
-Card.Header = ({ children, className, ...props }) => {
-  return (
-    <div className={`card-header ${className || ''}`} {...props}>
-      {children}
-    </div>
-  );
-};
-
-Card.Footer = ({ children, className, ...props }) => {
-  return (
-    <div className={`card-footer ${className || ''}`} {...props}>
-      {children}
     </div>
   );
 };

@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
-import { Container, Row, Col, Navbar, Nav, Button, Dropdown } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Container, Navbar, Nav, Button, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGraduationCap, faSignOutAlt, faUser, faUserGraduate, faCog, faList, faCaretDown, faIdCard, faUserCog, faInfo, faUniversity } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../utils/AuthContext';
+import AuthDropdowns from './AuthDropdowns';
+import '../styles/EnhancedAnimations.css';
+import '../styles/CustomStyles.css';
+import '../styles/DropdownStyles.css';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Effetto per rilevare lo scroll e aggiornare la navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -16,23 +31,36 @@ const Header = () => {
 
   return (
     <header className="header">
-      <Navbar bg="primary" variant="dark" expand="lg" className="navbar-animated glass-navbar py-3">
+      <Navbar 
+        expand="lg" 
+        className={`navbar-modern ${isScrolled ? 'scrolled' : ''}`}
+      >
         <Container>
-          <Navbar.Brand as={Link} to="/" className="d-flex align-items-center">
-            <FontAwesomeIcon icon={faGraduationCap} size="lg" className="me-2 logo-icon" />
-            <span className="fw-bold">UniparthenopeHub</span>
+          <Navbar.Brand as={Link} to="/" className="navbar-brand-modern">
+            <FontAwesomeIcon icon={faGraduationCap} className="logo-icon-modern" />
+            <span className="brand-text">UniparthenopeHub</span>
           </Navbar.Brand>
           
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle 
+            aria-controls="basic-navbar-nav" 
+            className="navbar-toggler-modern"
+          >
+            <div className="navbar-toggler-icon-modern">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </Navbar.Toggle>
           
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ms-auto">
-              <Nav.Link as={Link} to="/" className="nav-link-animated mx-1">Home</Nav.Link>
+            <Nav className="ms-auto nav-menu-modern">
+              <Nav.Link as={Link} to="/" className="nav-link-modern">Home</Nav.Link>
               
               {isAuthenticated() ? (
                 <>
                   <div className="d-flex align-items-center ms-2">
-                    <Nav.Link as={Link} to="/profile" className="text-white me-3 nav-link-animated">
+                    <Nav.Link as={Link} to="/profile" className="nav-link-modern">
                       <FontAwesomeIcon icon={faUser} className="me-1" />
                       {user.name}
                     </Nav.Link>
@@ -120,8 +148,8 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <Nav.Link as={Link} to="/login" className="nav-link-animated mx-1">Accedi</Nav.Link>
-                  <Nav.Link as={Link} to="/register" className="nav-link-animated mx-1">Registrati</Nav.Link>
+                  {/* Componenti dropdown per login e registrazione */}
+                  <AuthDropdowns />
                 </>
               )}
             </Nav>

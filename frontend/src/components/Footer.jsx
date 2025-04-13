@@ -1,86 +1,168 @@
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGraduationCap, faEnvelope, faPhone, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
-import { faFacebook, faTwitter, faInstagram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
+import { faFacebook, faTwitter, faInstagram, faLinkedin, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faMapMarkerAlt, faPhone, faEnvelope, faGlobe, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-  
   return (
-    <footer className="footer mt-auto py-5">
-      <Container>
-        <Row className="footer-content">
-          <Col lg={4} md={6} className="mb-4">
-            <div className="mb-4">
-              <h3 className="text-white d-flex align-items-center">
-                <FontAwesomeIcon icon={faGraduationCap} size="lg" className="me-2" />
-                UniparthenopeHub
-              </h3>
-              <p className="text-white-50">
-                Il portale ufficiale dell'Università Parthenope di Napoli per la gestione delle immatricolazioni e dei servizi agli studenti.
+    <footer className="modern-footer-redesigned">
+      {/* Rimossa la footer-wave come richiesto dall'utente */}
+      
+      <Container className="footer-container">
+        <div className="footer-row">
+          <div className="footer-col">
+            <div className="footer-logo-area">
+              <img src="https://via.placeholder.com/200x80/003366/ffffff?text=Parthenope" alt="Logo Università Parthenope" className="footer-logo" />
+              <p className="footer-tagline">
+                L'Università degli Studi di Napoli "Parthenope" è un'istituzione accademica con una lunga tradizione nell'istruzione superiore, focalizzata sulla ricerca e sulla formazione di qualità.
               </p>
             </div>
             <div className="footer-social">
-              <a href="https://facebook.com" className="footer-social-icon" target="_blank" rel="noopener noreferrer">
+              <a href="#" className="social-icon">
                 <FontAwesomeIcon icon={faFacebook} />
               </a>
-              <a href="https://twitter.com" className="footer-social-icon" target="_blank" rel="noopener noreferrer">
+              <a href="#" className="social-icon">
                 <FontAwesomeIcon icon={faTwitter} />
               </a>
-              <a href="https://instagram.com" className="footer-social-icon" target="_blank" rel="noopener noreferrer">
+              <a href="#" className="social-icon">
                 <FontAwesomeIcon icon={faInstagram} />
               </a>
-              <a href="https://linkedin.com" className="footer-social-icon" target="_blank" rel="noopener noreferrer">
+              <a href="#" className="social-icon">
                 <FontAwesomeIcon icon={faLinkedin} />
               </a>
+              <a href="#" className="social-icon">
+                <FontAwesomeIcon icon={faYoutube} />
+              </a>
             </div>
-          </Col>
+          </div>
           
-          <Col lg={2} md={6} className="mb-4">
-            <h5 className="footer-heading text-white">Link Rapidi</h5>
-            <ul className="list-unstyled">
-              <li><a href="/" className="footer-link">Home</a></li>
-              <li><a href="/immatricolazione" className="footer-link">Immatricolazione</a></li>
-              <li><a href="/login" className="footer-link">Accedi</a></li>
-              <li><a href="/register" className="footer-link">Registrati</a></li>
+          <div className="footer-col">
+            <h3 className="footer-heading">Link Utili</h3>
+            <ul className="footer-links">
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Chi Siamo
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Offerta Formativa
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Ricerca
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Servizi agli Studenti
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Orientamento
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Mobilità Internazionale
+                </a>
+              </li>
             </ul>
-          </Col>
+          </div>
           
-          <Col lg={3} md={6} className="mb-4">
-            <h5 className="footer-heading text-white">Corsi di Laurea</h5>
-            <ul className="list-unstyled">
-              <li><a href="#" className="footer-link">Informatica</a></li>
-              <li><a href="#" className="footer-link">Economia Aziendale</a></li>
-              <li><a href="#" className="footer-link">Ingegneria Informatica</a></li>
-              <li><a href="#" className="footer-link">Scienze Nautiche</a></li>
-              <li><a href="#" className="footer-link">Giurisprudenza</a></li>
+          <div className="footer-col">
+            <h3 className="footer-heading">Risorse</h3>
+            <ul className="footer-links">
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Biblioteca
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  E-Learning
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Calendario Accademico
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Bandi e Concorsi
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Albo Pretorio
+                </a>
+              </li>
+              <li className="footer-link-item">
+                <a href="#" className="footer-link">
+                  <FontAwesomeIcon icon={faChevronRight} className="footer-link-icon" />
+                  Amministrazione Trasparente
+                </a>
+              </li>
             </ul>
-          </Col>
+          </div>
           
-          <Col lg={3} md={6} className="mb-4">
-            <h5 className="footer-heading text-white">Contatti</h5>
-            <ul className="list-unstyled">
-              <li className="mb-2">
-                <FontAwesomeIcon icon={faMapMarkerAlt} className="me-2 text-primary" />
-                <span className="text-white-50">Via Acton, 38, 80133 Napoli NA</span>
+          <div className="footer-col">
+            <h3 className="footer-heading">Contatti</h3>
+            <ul className="contact-list">
+              <li className="contact-item">
+                <FontAwesomeIcon icon={faMapMarkerAlt} className="contact-icon" />
+                <div className="contact-text">
+                  Via Amm. F. Acton, 38 - 80133 Napoli (NA), Italia
+                </div>
               </li>
-              <li className="mb-2">
-                <FontAwesomeIcon icon={faPhone} className="me-2 text-primary" />
-                <span className="text-white-50">+39 081 123 4567</span>
+              <li className="contact-item">
+                <FontAwesomeIcon icon={faPhone} className="contact-icon" />
+                <div className="contact-text">
+                  +39 081 123 4567
+                </div>
               </li>
-              <li className="mb-2">
-                <FontAwesomeIcon icon={faEnvelope} className="me-2 text-primary" />
-                <span className="text-white-50">info@uniparthenope.it</span>
+              <li className="contact-item">
+                <FontAwesomeIcon icon={faEnvelope} className="contact-icon" />
+                <div className="contact-text">
+                  info@uniparthenope.it
+                </div>
+              </li>
+              <li className="contact-item">
+                <FontAwesomeIcon icon={faGlobe} className="contact-icon" />
+                <div className="contact-text">
+                  www.uniparthenope.it
+                </div>
               </li>
             </ul>
-          </Col>
-        </Row>
-        
+          </div>
+        </div>
+      </Container>
+      
+      <Container>
         <div className="footer-bottom">
-          <p className="mb-0">
-            &copy; {currentYear} UniparthenopeHub - Università degli Studi di Napoli "Parthenope". Tutti i diritti riservati.
+          <p className="footer-copyright">
+            &copy; {new Date().getFullYear()} Università degli Studi di Napoli "Parthenope". Tutti i diritti riservati.
           </p>
+          <div className="footer-nav">
+            <a href="#" className="footer-nav-link">Privacy Policy</a>
+            <a href="#" className="footer-nav-link">Cookie Policy</a>
+            <a href="#" className="footer-nav-link">Note Legali</a>
+          </div>
         </div>
       </Container>
     </footer>
