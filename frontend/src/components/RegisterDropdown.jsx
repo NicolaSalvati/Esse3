@@ -1,7 +1,166 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft, faCalculator, faUserPlus, faCheck, faIdCard, faInfoCircle, faUser, faAddressCard, faCalendarAlt } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faCalculator, faCheck, faUniversity, faCalendarAlt, faUser, faIdCard, faGlobe, faMapMarkerAlt, faCity, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import '../styles/RegisterDropdown.css';
+
+// Database delle nazioni
+const NAZIONI = [
+  "AFGHANISTAN", "ALBANIA", "ALGERIA", "ANDORRA", "ANGOLA", "ANTIGUA E BARBUDA", "ARABIA SAUDITA",
+  "ARGENTINA", "ARMENIA", "AUSTRALIA", "AUSTRIA", "AZERBAIGIAN", "BAHAMAS", "BAHREIN", "BANGLADESH",
+  "BARBADOS", "BELGIO", "BELIZE", "BENIN", "BHUTAN", "BIELORUSSIA", "BOLIVIA", "BOSNIA ED ERZEGOVINA",
+  "BOTSWANA", "BRASILE", "BRUNEI", "BULGARIA", "BURKINA FASO", "BURUNDI", "CAMBOGIA", "CAMERUN",
+  "CANADA", "CAPO VERDE", "CIAD", "CILE", "CINA", "CIPRO", "CITTA DEL VATICANO", "COLOMBIA", "COMORE",
+  "CONGO", "COREA DEL NORD", "COREA DEL SUD", "COSTA D'AVORIO", "COSTA RICA", "CROAZIA", "CUBA",
+  "DANIMARCA", "DOMINICA", "ECUADOR", "EGITTO", "EL SALVADOR", "EMIRATI ARABI UNITI", "ERITREA",
+  "ESTONIA", "ETIOPIA", "FIJI", "FILIPPINE", "FINLANDIA", "FRANCIA", "GABON", "GAMBIA", "GEORGIA",
+  "GERMANIA", "GHANA", "GIAMAICA", "GIAPPONE", "GIBUTI", "GIORDANIA", "GRECIA", "GRENADA", "GUATEMALA",
+  "GUINEA", "GUINEA BISSAU", "GUINEA EQUATORIALE", "GUYANA", "HAITI", "HONDURAS", "INDIA", "INDONESIA",
+  "IRAN", "IRAQ", "IRLANDA", "ISLANDA", "ISRAELE", "ITALIA", "KAZAKISTAN", "KENYA", "KIRGHIZISTAN",
+  "KIRIBATI", "KUWAIT", "LAOS", "LESOTHO", "LETTONIA", "LIBANO", "LIBERIA", "LIBIA", "LIECHTENSTEIN",
+  "LITUANIA", "LUSSEMBURGO", "MACEDONIA", "MADAGASCAR", "MALAWI", "MALAYSIA", "MALDIVE", "MALI",
+  "MALTA", "MAROCCO", "MAURITANIA", "MAURITIUS", "MESSICO", "MICRONESIA", "MOLDAVIA", "MONACO",
+  "MONGOLIA", "MONTENEGRO", "MOZAMBICO", "MYANMAR", "NAMIBIA", "NAURU", "NEPAL", "NICARAGUA", "NIGER",
+  "NIGERIA", "NORVEGIA", "NUOVA ZELANDA", "OMAN", "PAESI BASSI", "PAKISTAN", "PALAU", "PANAMA",
+  "PAPUA NUOVA GUINEA", "PARAGUAY", "PERU", "POLONIA", "PORTOGALLO", "QATAR", "REGNO UNITO",
+  "REPUBBLICA CECA", "REPUBBLICA CENTRAFRICANA", "REPUBBLICA DEMOCRATICA DEL CONGO",
+  "REPUBBLICA DOMINICANA", "ROMANIA", "RUANDA", "RUSSIA", "SAINT KITTS E NEVIS", "SAINT LUCIA",
+  "SAINT VINCENT E GRENADINE", "SAMOA", "SAN MARINO", "SAO TOME E PRINCIPE", "SENEGAL", "SERBIA",
+  "SEYCHELLES", "SIERRA LEONE", "SINGAPORE", "SIRIA", "SLOVACCHIA", "SLOVENIA", "SOMALIA", "SPAGNA",
+  "SRI LANKA", "STATI UNITI", "SUDAFRICA", "SUDAN", "SUDAN DEL SUD", "SURINAME", "SVEZIA", "SVIZZERA",
+  "SWAZILAND", "TAGIKISTAN", "TAIWAN", "TANZANIA", "THAILANDIA", "TIMOR ORIENTALE", "TOGO", "TONGA",
+  "TRINIDAD E TOBAGO", "TUNISIA", "TURCHIA", "TURKMENISTAN", "TUVALU", "UCRAINA", "UGANDA", "UNGHERIA",
+  "URUGUAY", "UZBEKISTAN", "VANUATU", "VENEZUELA", "VIETNAM", "YEMEN", "ZAMBIA", "ZIMBABWE"
+];
+
+// Database delle province italiane
+const PROVINCE_ITALIANE = [
+  "AGRIGENTO", "ALESSANDRIA", "ANCONA", "AOSTA", "AREZZO", "ASCOLI PICENO", "ASTI", "AVELLINO", "BARI",
+  "BARLETTA-ANDRIA-TRANI", "BELLUNO", "BENEVENTO", "BERGAMO", "BIELLA", "BOLOGNA", "BOLZANO", "BRESCIA",
+  "BRINDISI", "CAGLIARI", "CALTANISSETTA", "CAMPOBASSO", "CASERTA", "CATANIA", "CATANZARO", "CHIETI",
+  "COMO", "COSENZA", "CREMONA", "CROTONE", "CUNEO", "ENNA", "FERMO", "FERRARA", "FIRENZE", "FOGGIA",
+  "FORLI'-CESENA", "FROSINONE", "GENOVA", "GORIZIA", "GROSSETO", "IMPERIA", "ISERNIA", "LA SPEZIA",
+  "L'AQUILA", "LATINA", "LECCE", "LECCO", "LIVORNO", "LODI", "LUCCA", "MACERATA", "MANTOVA",
+  "MASSA-CARRARA", "MATERA", "MESSINA", "MILANO", "MODENA", "MONZA E DELLA BRIANZA", "NAPOLI", "NOVARA",
+  "NUORO", "ORISTANO", "PADOVA", "PALERMO", "PARMA", "PAVIA", "PERUGIA", "PESARO E URBINO", "PESCARA",
+  "PIACENZA", "PISA", "PISTOIA", "PORDENONE", "POTENZA", "PRATO", "RAGUSA", "RAVENNA", "REGGIO CALABRIA",
+  "REGGIO EMILIA", "RIETI", "RIMINI", "ROMA", "ROVIGO", "SALERNO", "SASSARI", "SAVONA", "SIENA",
+  "SIRACUSA", "SONDRIO", "SUD SARDEGNA", "TARANTO", "TERAMO", "TERNI", "TORINO", "TRAPANI", "TRENTO",
+  "TREVISO", "TRIESTE", "UDINE", "VARESE", "VENEZIA", "VERBANO-CUSIO-OSSOLA", "VERCELLI", "VERONA",
+  "VIBO VALENTIA", "VICENZA", "VITERBO"
+];
+
+// Database delle città italiane (esempio con alcune città per provincia)
+const CITTA_ITALIANE = {
+  "AGRIGENTO": ["AGRIGENTO", "LICATA", "SCIACCA", "CANICATTÌ", "FAVARA"],
+  "ALESSANDRIA": ["ALESSANDRIA", "CASALE MONFERRATO", "NOVI LIGURE", "TORTONA", "ACQUI TERME"],
+  "ANCONA": ["ANCONA", "SENIGALLIA", "JESI", "FABRIANO", "OSIMO"],
+  "AOSTA": ["AOSTA", "SAINT-VINCENT", "CHATILLON", "SARRE", "GRESSAN"],
+  "AREZZO": ["AREZZO", "CORTONA", "SANSEPOLCRO", "MONTEVARCHI", "SAN GIOVANNI VALDARNO"],
+  "ASCOLI PICENO": ["ASCOLI PICENO", "SAN BENEDETTO DEL TRONTO", "GROTTAMMARE", "FOLIGNANO", "MONTEPRANDONE"],
+  "ASTI": ["ASTI", "NIZZA MONFERRATO", "CANELLI", "SAN DAMIANO D'ASTI", "COSTIGLIOLE D'ASTI"],
+  "AVELLINO": ["AVELLINO", "ARIANO IRPINO", "MONTELLA", "SOLOFRA", "MERCOGLIANO"],
+  "BARI": ["BARI", "ALTAMURA", "MONOPOLI", "BITONTO", "MOLFETTA"],
+  "BARLETTA-ANDRIA-TRANI": ["BARLETTA", "ANDRIA", "TRANI", "BISCEGLIE", "CANOSA DI PUGLIA"],
+  "BELLUNO": ["BELLUNO", "FELTRE", "SEDICO", "PONTE NELLE ALPI", "SANTA GIUSTINA"],
+  "BENEVENTO": ["BENEVENTO", "MONTESARCHIO", "SAN GIORGIO DEL SANNIO", "TELESE TERME", "AIROLA"],
+  "BERGAMO": ["BERGAMO", "TREVIGLIO", "SERIATE", "DALMINE", "ROMANO DI LOMBARDIA"],
+  "BIELLA": ["BIELLA", "COSSATO", "VIGLIANO BIELLESE", "CANDELO", "VALDILANA"],
+  "BOLOGNA": ["BOLOGNA", "IMOLA", "CASALECCHIO DI RENO", "SAN LAZZARO DI SAVENA", "VALSAMOGGIA"],
+  "BOLZANO": ["BOLZANO", "MERANO", "BRESSANONE", "LAIVES", "BRUNICO"],
+  "BRESCIA": ["BRESCIA", "DESENZANO DEL GARDA", "MONTICHIARI", "LUMEZZANE", "ROVATO"],
+  "BRINDISI": ["BRINDISI", "FASANO", "OSTUNI", "FRANCAVILLA FONTANA", "MESAGNE"],
+  "CAGLIARI": ["CAGLIARI", "QUARTU SANT'ELENA", "SELARGIUS", "ASSEMINI", "CAPOTERRA"],
+  "CALTANISSETTA": ["CALTANISSETTA", "GELA", "NISCEMI", "SAN CATALDO", "MAZZARINO"],
+  "CAMPOBASSO": ["CAMPOBASSO", "TERMOLI", "BOJANO", "LARINO", "CAMPOMARINO"],
+  "CASERTA": ["CASERTA", "AVERSA", "MARCIANISE", "MADDALONI", "SANTA MARIA CAPUA VETERE"],
+  "CATANIA": ["CATANIA", "ACIREALE", "MISTERBIANCO", "PATERNÒ", "CALTAGIRONE"],
+  "CATANZARO": ["CATANZARO", "LAMEZIA TERME", "SOVERATO", "SELLIA MARINA", "BORGIA"],
+  "CHIETI": ["CHIETI", "VASTO", "LANCIANO", "FRANCAVILLA AL MARE", "ORTONA"],
+  "COMO": ["COMO", "CANTÙ", "MARIANO COMENSE", "ERBA", "OLGIATE COMASCO"],
+  "COSENZA": ["COSENZA", "CORIGLIANO-ROSSANO", "RENDE", "CASTROVILLARI", "PAOLA"],
+  "CREMONA": ["CREMONA", "CREMA", "CASALMAGGIORE", "SORESINA", "CASTELLEONE"],
+  "CROTONE": ["CROTONE", "CIRÒ MARINA", "ISOLA DI CAPO RIZZUTO", "CUTRO", "PETILIA POLICASTRO"],
+  "CUNEO": ["CUNEO", "ALBA", "BRA", "FOSSANO", "MONDOVÌ"],
+  "ENNA": ["ENNA", "PIAZZA ARMERINA", "NICOSIA", "LEONFORTE", "AGIRA"],
+  "FERMO": ["FERMO", "PORTO SANT'ELPIDIO", "SANT'ELPIDIO A MARE", "PORTO SAN GIORGIO", "MONTEGRANARO"],
+  "FERRARA": ["FERRARA", "CENTO", "COMACCHIO", "ARGENTA", "COPPARO"],
+  "FIRENZE": ["FIRENZE", "EMPOLI", "SCANDICCI", "SESTO FIORENTINO", "CAMPI BISENZIO"],
+  "FOGGIA": ["FOGGIA", "CERIGNOLA", "MANFREDONIA", "SAN SEVERO", "LUCERA"],
+  "FORLI'-CESENA": ["FORLÌ", "CESENA", "CESENATICO", "SAVIGNANO SUL RUBICONE", "FORLIMPOPOLI"],
+  "FROSINONE": ["FROSINONE", "CASSINO", "SORA", "ALATRI", "ANAGNI"],
+  "GENOVA": ["GENOVA", "RAPALLO", "CHIAVARI", "SESTRI LEVANTE", "LAVAGNA"],
+  "GORIZIA": ["GORIZIA", "MONFALCONE", "RONCHI DEI LEGIONARI", "GRADISCA D'ISONZO", "CORMONS"],
+  "GROSSETO": ["GROSSETO", "FOLLONICA", "ORBETELLO", "CASTIGLIONE DELLA PESCAIA", "MASSA MARITTIMA"],
+  "IMPERIA": ["IMPERIA", "SANREMO", "VENTIMIGLIA", "TAGGIA", "BORDIGHERA"],
+  "ISERNIA": ["ISERNIA", "VENAFRO", "AGNONE", "SESTO CAMPANO", "FROSOLONE"],
+  "LA SPEZIA": ["LA SPEZIA", "SARZANA", "ARCOLA", "SANTO STEFANO DI MAGRA", "LERICI"],
+  "L'AQUILA": ["L'AQUILA", "AVEZZANO", "SULMONA", "CELANO", "TAGLIACOZZO"],
+  "LATINA": ["LATINA", "APRILIA", "TERRACINA", "FORMIA", "CISTERNA DI LATINA"],
+  "LECCE": ["LECCE", "NARDÒ", "GALATINA", "TRICASE", "CASARANO"],
+  "LECCO": ["LECCO", "MERATE", "CALOLZIOCORTE", "CASATENOVO", "MANDELLO DEL LARIO"],
+  "LIVORNO": ["LIVORNO", "PIOMBINO", "CECINA", "ROSIGNANO MARITTIMO", "PORTOFERRAIO"],
+  "LODI": ["LODI", "CODOGNO", "CASALPUSTERLENGO", "SANT'ANGELO LODIGIANO", "LODI VECCHIO"],
+  "LUCCA": ["LUCCA", "VIAREGGIO", "CAPANNORI", "CAMAIORE", "PIETRASANTA"],
+  "MACERATA": ["MACERATA", "CIVITANOVA MARCHE", "RECANATI", "TOLENTINO", "POTENZA PICENA"],
+  "MANTOVA": ["MANTOVA", "CASTIGLIONE DELLE STIVIERE", "SUZZARA", "VIADANA", "PORTO MANTOVANO"],
+  "MASSA-CARRARA": ["MASSA", "CARRARA", "MONTIGNOSO", "AULLA", "PONTREMOLI"],
+  "MATERA": ["MATERA", "POLICORO", "PISTICCI", "BERNALDA", "MONTESCAGLIOSO"],
+  "MESSINA": ["MESSINA", "BARCELLONA POZZO DI GOTTO", "MILAZZO", "PATTI", "CAPO D'ORLANDO"],
+  "MILANO": ["MILANO", "SESTO SAN GIOVANNI", "CINISELLO BALSAMO", "LEGNANO", "RHO"],
+  "MODENA": ["MODENA", "CARPI", "SASSUOLO", "FORMIGINE", "CASTELFRANCO EMILIA"],
+  "MONZA E DELLA BRIANZA": ["MONZA", "SEREGNO", "LISSONE", "DESIO", "CESANO MADERNO"],
+  "NAPOLI": ["NAPOLI", "GIUGLIANO IN CAMPANIA", "TORRE DEL GRECO", "POZZUOLI", "CASORIA"],
+  "NOVARA": ["NOVARA", "BORGOMANERO", "TRECATE", "GALLIATE", "ARONA"],
+  "NUORO": ["NUORO", "SINISCOLA", "MACOMER", "DORGALI", "OROSEI"],
+  "ORISTANO": ["ORISTANO", "TERRALBA", "CABRAS", "BOSA", "MARRUBIU"],
+  "PADOVA": ["PADOVA", "ALBIGNASEGO", "SELVAZZANO DENTRO", "ABANO TERME", "VIGONZA"],
+  "PALERMO": ["PALERMO", "BAGHERIA", "CARINI", "MONREALE", "PARTINICO"],
+  "PARMA": ["PARMA", "FIDENZA", "SALSOMAGGIORE TERME", "COLLECCHIO", "NOCETO"],
+  "PAVIA": ["PAVIA", "VIGEVANO", "VOGHERA", "MORTARA", "STRADELLA"],
+  "PERUGIA": ["PERUGIA", "FOLIGNO", "CITTÀ DI CASTELLO", "SPOLETO", "ASSISI"],
+  "PESARO E URBINO": ["PESARO", "FANO", "URBINO", "FERMIGNANO", "FOSSOMBRONE"],
+  "PESCARA": ["PESCARA", "MONTESILVANO", "SPOLTORE", "CITTÀ SANT'ANGELO", "PENNE"],
+  "PIACENZA": ["PIACENZA", "FIORENZUOLA D'ARDA", "CASTEL SAN GIOVANNI", "ROTTOFRENO", "PODENZANO"],
+  "PISA": ["PISA", "CASCINA", "SAN GIULIANO TERME", "PONTEDERA", "SAN MINIATO"],
+  "PISTOIA": ["PISTOIA", "MONTECATINI TERME", "QUARRATA", "MONSUMMANO TERME", "PESCIA"],
+  "PORDENONE": ["PORDENONE", "SACILE", "CORDENONS", "AZZANO DECIMO", "FIUME VENETO"],
+  "POTENZA": ["POTENZA", "MELFI", "LAVELLO", "RIONERO IN VULTURE", "VENOSA"],
+  "PRATO": ["PRATO", "MONTEMURLO", "CARMIGNANO", "POGGIO A CAIANO", "VAIANO"],
+  "RAGUSA": ["RAGUSA", "VITTORIA", "MODICA", "COMISO", "POZZALLO"],
+  "RAVENNA": ["RAVENNA", "FAENZA", "LUGO", "CERVIA", "RUSSI"],
+  "REGGIO CALABRIA": ["REGGIO CALABRIA", "GIOIA TAURO", "PALMI", "SIDERNO", "VILLA SAN GIOVANNI"],
+  "REGGIO EMILIA": ["REGGIO EMILIA", "CORREGGIO", "SCANDIANO", "CASALGRANDE", "RUBIERA"],
+  "RIETI": ["RIETI", "FARA IN SABINA", "CITTADUCALE", "CONTIGLIANO", "POGGIO MIRTETO"],
+  "RIMINI": ["RIMINI", "RICCIONE", "SANTARCANGELO DI ROMAGNA", "BELLARIA-IGEA MARINA", "CORIANO"],
+  "ROMA": ["ROMA", "GUIDONIA MONTECELIO", "FIUMICINO", "POMEZIA", "TIVOLI"],
+  "ROVIGO": ["ROVIGO", "ADRIA", "LENDINARA", "PORTO VIRO", "OCCHIOBELLO"],
+  "SALERNO": ["SALERNO", "BATTIPAGLIA", "NOCERA INFERIORE", "SCAFATI", "CAVA DE' TIRRENI"],
+  "SASSARI": ["SASSARI", "ALGHERO", "PORTO TORRES", "OZIERI", "SORSO"],
+  "SAVONA": ["SAVONA", "ALBENGA", "CAIRO MONTENOTTE", "VARAZZE", "FINALE LIGURE"],
+  "SIENA": ["SIENA", "POGGIBONSI", "COLLE DI VAL D'ELSA", "MONTEPULCIANO", "CHIANCIANO TERME"],
+  "SIRACUSA": ["SIRACUSA", "AUGUSTA", "AVOLA", "NOTO", "LENTINI"],
+  "SONDRIO": ["SONDRIO", "MORBEGNO", "TIRANO", "LIVIGNO", "CHIAVENNA"],
+  "SUD SARDEGNA": ["CARBONIA", "IGLESIAS", "GUSPINI", "VILLACIDRO", "SANT'ANTIOCO"],
+  "TARANTO": ["TARANTO", "MARTINA FRANCA", "MASSAFRA", "GROTTAGLIE", "MANDURIA"],
+  "TERAMO": ["TERAMO", "GIULIANOVA", "ROSETO DEGLI ABRUZZI", "ATRI", "SILVI"],
+  "TERNI": ["TERNI", "ORVIETO", "NARNI", "AMELIA", "ACQUASPARTA"],
+  "TORINO": ["TORINO", "MONCALIERI", "COLLEGNO", "RIVOLI", "NICHELINO"],
+  "TRAPANI": ["TRAPANI", "MARSALA", "MAZARA DEL VALLO", "ALCAMO", "CASTELVETRANO"],
+  "TRENTO": ["TRENTO", "ROVERETO", "PERGINE VALSUGANA", "ARCO", "RIVA DEL GARDA"],
+  "TREVISO": ["TREVISO", "CONEGLIANO", "CASTELFRANCO VENETO", "MONTEBELLUNA", "VITTORIO VENETO"],
+  "TRIESTE": ["TRIESTE", "MUGGIA", "DUINO-AURISINA", "SAN DORLIGO DELLA VALLE", "SGONICO"],
+  "UDINE": ["UDINE", "CODROIPO", "LATISANA", "CERVIGNANO DEL FRIULI", "GEMONA DEL FRIULI"],
+  "VARESE": ["VARESE", "BUSTO ARSIZIO", "GALLARATE", "SARONNO", "CASSANO MAGNAGO"],
+  "VENEZIA": ["VENEZIA", "CHIOGGIA", "SAN DONÀ DI PIAVE", "MIRA", "MIRANO"],
+  "VERBANO-CUSIO-OSSOLA": ["VERBANIA", "DOMODOSSOLA", "OMEGNA", "GRAVELLONA TOCE", "VILLADOSSOLA"],
+  "VERCELLI": ["VERCELLI", "BORGOSESIA", "SANTHIÀ", "CRESCENTINO", "GATTINARA"],
+  "VERONA": ["VERONA", "VILLAFRANCA DI VERONA", "SAN BONIFACIO", "LEGNAGO", "SAN GIOVANNI LUPATOTO"],
+  "VIBO VALENTIA": ["VIBO VALENTIA", "TROPEA", "SERRA SAN BRUNO", "NICOTERA", "MILETO"],
+  "VICENZA": ["VICENZA", "BASSANO DEL GRAPPA", "SCHIO", "VALDAGNO", "ARZIGNANO"],
+  "VITERBO": ["VITERBO", "CIVITA CASTELLANA", "TARQUINIA", "VETRALLA", "MONTEFIASCONE"]
+};
 
 // Database dei codici catastali dei comuni italiani e delle nazioni estere
 const COMUNI_ITALIANI = {
@@ -71,159 +230,7 @@ const NAZIONI_ESTERE = {
   "VENEZUELA": "Z614", "VIETNAM": "Z251", "YEMEN": "Z246", "ZAMBIA": "Z355", "ZIMBABWE": "Z337"
 };
 
-// Lista delle cittadinanze
-const CITTADINANZE = [
-  "Italiana", "Afghana", "Albanese", "Algerina", "Andorrana", "Angolana", "Antiguana", "Argentina",
-  "Armena", "Australiana", "Austriaca", "Azera", "Bahamense", "Bahreinita", "Bangladese", "Barbadiana",
-  "Belga", "Beliziana", "Beninese", "Bhutanese", "Bielorussa", "Boliviana", "Bosniaca", "Botswana",
-  "Brasiliana", "Bruneiana", "Bulgara", "Burkinabé", "Burundese", "Cambogiana", "Camerunense", "Canadese",
-  "Capoverdiana", "Ciadiana", "Cilena", "Cinese", "Cipriota", "Colombiana", "Comoriana", "Congolese",
-  "Nordcoreana", "Sudcoreana", "Ivoriana", "Costaricana", "Croata", "Cubana", "Danese", "Dominicana",
-  "Ecuadoriana", "Egiziana", "Salvadoregna", "Emiratina", "Eritrea", "Estone", "Etiope", "Figiana",
-  "Filippina", "Finlandese", "Francese", "Gabonese", "Gambiana", "Georgiana", "Tedesca", "Ghanese",
-  "Giamaicana", "Giapponese", "Gibutiana", "Giordana", "Greca", "Grenadina", "Guatemalteca", "Guineana",
-  "Guineana-Bissau", "Equatoguineana", "Guyanese", "Haitiana", "Honduregna", "Indiana", "Indonesiana",
-  "Iraniana", "Irachena", "Irlandese", "Islandese", "Israeliana", "Italiana", "Kazaka", "Keniota",
-  "Kirghisa", "Kiribatiana", "Kuwaitiana", "Laotiana", "Lesothiana", "Lettone", "Libanese", "Liberiana",
-  "Libica", "Liechtensteiniana", "Lituana", "Lussemburghese", "Macedone", "Malgascia", "Malawiana",
-  "Malese", "Maldiviana", "Maliana", "Maltese", "Marocchina", "Mauritana", "Mauriziana", "Messicana",
-  "Micronesiana", "Moldava", "Monegasca", "Mongola", "Montenegrina", "Mozambicana", "Birmana", "Namibiana",
-  "Nauruana", "Nepalese", "Nicaraguense", "Nigerina", "Nigeriana", "Norvegese", "Neozelandese", "Omanita",
-  "Olandese", "Pakistana", "Paluana", "Panamense", "Papuana", "Paraguaiana", "Peruviana", "Polacca",
-  "Portoghese", "Qatariota", "Britannica", "Ceca", "Centrafricana", "Congolese", "Dominicana", "Rumena",
-  "Ruandese", "Russa", "Kittitiana e Nevisiana", "Luciana", "Vincentina", "Samoana", "Sammarinese",
-  "Sãotomense", "Senegalese", "Serba", "Seychellese", "Sierraleonese", "Singaporiana", "Siriana",
-  "Slovacca", "Slovena", "Somala", "Spagnola", "Srilankese", "Statunitense", "Sudafricana", "Sudanese",
-  "Sudsudanese", "Surinamese", "Svedese", "Svizzera", "Swati", "Tagika", "Taiwanese", "Tanzaniana",
-  "Thailandese", "Est-timorese", "Togolese", "Tongana", "Trinidadiana", "Tunisina", "Turca", "Turkmena",
-  "Tuvaluana", "Ucraina", "Ugandese", "Ungherese", "Uruguaiana", "Uzbeka", "Vanuatuana", "Venezuelana",
-  "Vietnamita", "Yemenita", "Zambiana", "Zimbabwese"
-];
-
-// Lista delle province italiane
-const PROVINCE_ITALIANE = [
-  "Agrigento", "Alessandria", "Ancona", "Aosta", "Arezzo", "Ascoli Piceno", "Asti", "Avellino", "Bari",
-  "Barletta-Andria-Trani", "Belluno", "Benevento", "Bergamo", "Biella", "Bologna", "Bolzano", "Brescia",
-  "Brindisi", "Cagliari", "Caltanissetta", "Campobasso", "Caserta", "Catania", "Catanzaro", "Chieti",
-  "Como", "Cosenza", "Cremona", "Crotone", "Cuneo", "Enna", "Fermo", "Ferrara", "Firenze", "Foggia",
-  "Forlì-Cesena", "Frosinone", "Genova", "Gorizia", "Grosseto", "Imperia", "Isernia", "L'Aquila",
-  "La Spezia", "Latina", "Lecce", "Lecco", "Livorno", "Lodi", "Lucca", "Macerata", "Mantova",
-  "Massa-Carrara", "Matera", "Messina", "Milano", "Modena", "Monza e Brianza", "Napoli", "Novara",
-  "Nuoro", "Oristano", "Padova", "Palermo", "Parma", "Pavia", "Perugia", "Pesaro e Urbino", "Pescara",
-  "Piacenza", "Pisa", "Pistoia", "Pordenone", "Potenza", "Prato", "Ragusa", "Ravenna", "Reggio Calabria",
-  "Reggio Emilia", "Rieti", "Rimini", "Roma", "Rovigo", "Salerno", "Sassari", "Savona", "Siena",
-  "Siracusa", "Sondrio", "Sud Sardegna", "Taranto", "Teramo", "Terni", "Torino", "Trapani", "Trento",
-  "Treviso", "Trieste", "Udine", "Varese", "Venezia", "Verbano-Cusio-Ossola", "Vercelli", "Verona",
-  "Vibo Valentia", "Vicenza", "Viterbo"
-];
-
-// Funzione per formattare la data nel formato gg/MM/yyyy
-const formatDate = (dateString) => {
-  if (!dateString) return '';
-  
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  
-  return `${day}/${month}/${year}`;
-};
-
-// Funzione per convertire la data dal formato gg/MM/yyyy a yyyy-MM-dd
-const parseDate = (dateString) => {
-  if (!dateString) return '';
-  
-  const parts = dateString.split('/');
-  if (parts.length !== 3) return dateString;
-  
-  const day = parts[0];
-  const month = parts[1];
-  const year = parts[2];
-  
-  return `${year}-${month}-${day}`;
-};
-
-// Funzione per estrarre informazioni dal codice fiscale
-const extractInfoFromFiscalCode = (fiscalCode) => {
-  if (!fiscalCode || fiscalCode.length !== 16) {
-    return null;
-  }
-
-  try {
-    // Estrai anno di nascita (posizioni 7-8)
-    const yearCode = fiscalCode.substring(6, 8);
-    let year = parseInt(yearCode, 10);
-    // Determina il secolo (1900 o 2000)
-    const currentYear = new Date().getFullYear();
-    const century = year > (currentYear % 100) ? 1900 : 2000;
-    year += century;
-
-    // Estrai mese di nascita (posizione 9)
-    const monthCode = fiscalCode.charAt(8);
-    const monthMap = {
-      'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'H': 5,
-      'L': 6, 'M': 7, 'P': 8, 'R': 9, 'S': 10, 'T': 11
-    };
-    const month = monthMap[monthCode];
-
-    // Estrai giorno di nascita e genere (posizioni 10-11)
-    let day = parseInt(fiscalCode.substring(9, 11), 10);
-    // Se il giorno è > 40, la persona è di sesso femminile
-    const gender = day > 40 ? 'F' : 'M';
-    if (day > 40) {
-      day -= 40;
-    }
-
-    // Crea la data di nascita
-    const birthDate = new Date(year, month, day);
-    const formattedBirthDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-
-    // Estrai codice catastale (posizioni 12-15)
-    const placeCode = fiscalCode.substring(11, 15);
-    
-    // Determina se il luogo di nascita è in Italia o all'estero
-    let birthPlace = null;
-    let isItalian = false;
-    let province = '';
-    let city = '';
-    
-    if (placeCode.startsWith('Z')) {
-      // Codice di una nazione estera
-      birthPlace = CODICI_A_NAZIONI[placeCode] || null;
-    } else {
-      // Codice di un comune italiano
-      city = CODICI_A_COMUNI[placeCode] || null;
-      birthPlace = 'ITALIA';
-      isItalian = true;
-      
-      // Cerca la provincia in base al comune
-      // Nota: questa è una semplificazione, in un'implementazione reale
-      // dovresti avere una mappatura comune -> provincia
-      if (city === 'ROMA') province = 'Roma';
-      else if (city === 'MILANO') province = 'Milano';
-      else if (city === 'NAPOLI') province = 'Napoli';
-      else if (city === 'TORINO') province = 'Torino';
-      else if (city === 'AOSTA') province = 'Aosta';
-      else if (city === 'MESAGNE') province = 'Brindisi';
-      else if (city === 'PALERMO') province = 'Palermo';
-      else province = '';
-    }
-
-    return {
-      birthDate: formattedBirthDate,
-      gender,
-      nation: birthPlace,
-      isItalian,
-      province,
-      city
-    };
-  } catch (error) {
-    console.error("Errore nell'estrazione delle informazioni dal codice fiscale:", error);
-    return null;
-  }
-};
-
-// Funzione completa per calcolare il codice fiscale
+// Funzione per calcolare il codice fiscale
 const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace) => {
   // Funzione per normalizzare una stringa (rimuovere spazi, accenti, ecc.)
   const normalizeString = (str) => {
@@ -294,7 +301,7 @@ const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace)
   const getMonthCode = (birthDate) => {
     const date = new Date(birthDate);
     const month = date.getMonth();
-    const monthCodes = ['A', 'B', 'C', 'D', 'E', 'H', 'L', 'M', 'P', 'R', 'S', 'T'];
+    const monthCodes = "ABCDEHLMPRST";
     return monthCodes[month];
   };
   
@@ -303,67 +310,77 @@ const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace)
     const date = new Date(birthDate);
     let day = date.getDate();
     
-    // Per le femmine, aggiungi 40 al giorno
-    if (gender === 'F') {
+    // Per le donne, aggiungi 40 al giorno
+    if (gender.toUpperCase() === "F") {
       day += 40;
     }
     
     // Formatta il giorno come stringa di 2 cifre
-    return day.toString().padStart(2, '0');
+    return day.toString().padStart(2, "0");
   };
   
-  // Funzione per ottenere il codice del luogo di nascita
+  // Funzione per ottenere il codice del comune/stato estero
   const getPlaceCode = (birthPlace) => {
-    // Controlla se il luogo di nascita è un comune italiano
-    const communeCode = COMUNI_ITALIANI[birthPlace.toUpperCase()];
-    if (communeCode) {
-      return communeCode;
+    // Normalizza il nome del luogo
+    const normalizedPlace = birthPlace.toUpperCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+    
+    // Cerca prima nei comuni italiani
+    if (COMUNI_ITALIANI[normalizedPlace]) {
+      return COMUNI_ITALIANI[normalizedPlace];
     }
     
-    // Controlla se il luogo di nascita è una nazione estera
-    const nationCode = NAZIONI_ESTERE[birthPlace.toUpperCase()];
-    if (nationCode) {
-      return nationCode;
+    // Poi cerca nelle nazioni estere
+    if (NAZIONI_ESTERE[normalizedPlace]) {
+      return NAZIONI_ESTERE[normalizedPlace];
     }
     
-    // Se non è stato trovato un codice, restituisci un valore di default
-    return "Z000";
+    // Se non trovato, restituisci un placeholder
+    console.warn(`Codice catastale non trovato per: ${birthPlace}`);
+    return "XXXX";
   };
   
   // Funzione per calcolare il carattere di controllo
-  const getControlChar = (code) => {
-    const evenMap = {
-      '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-      'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
-      'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19,
-      'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25
-    };
-    
-    const oddMap = {
+  const getControlChar = (partialCode) => {
+    // Tabella di conversione per i caratteri in posizione dispari (1-based index)
+    const oddValues = {
       '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
       'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
       'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
       'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
     };
     
-    let sum = 0;
+    // Tabella di conversione per i caratteri in posizione pari (1-based index)
+    const evenValues = {
+      '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
+      'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
+      'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19,
+      'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25
+    };
     
-    for (let i = 0; i < code.length; i++) {
-      const char = code[i];
-      if (i % 2 === 0) {
-        sum += oddMap[char];
-      } else {
-        sum += evenMap[char];
+    // Calcola la somma dei valori
+    let sum = 0;
+    for (let i = 0; i < partialCode.length; i++) {
+      const char = partialCode[i];
+      
+      // In JavaScript, gli indici sono 0-based, ma l'algoritmo del codice fiscale usa indici 1-based
+      if (i % 2 === 0) { // Posizione dispari (1, 3, 5...) nell'indice 1-based
+        sum += oddValues[char];
+      } else { // Posizione pari (2, 4, 6...) nell'indice 1-based
+        sum += evenValues[char];
       }
     }
     
+    // Calcola il resto della divisione per 26
     const remainder = sum % 26;
-    const controlChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    return controlChars[remainder];
+    
+    // Converti il resto in una lettera (A=0, B=1, ..., Z=25)
+    return String.fromCharCode(65 + remainder);
   };
   
   try {
-    // Ottieni i codici per ogni parte del codice fiscale
+    // Calcola le parti del codice fiscale
     const lastNameCode = getLastNameCode(lastName);
     const firstNameCode = getFirstNameCode(firstName);
     const yearCode = getYearCode(birthDate);
@@ -371,7 +388,7 @@ const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace)
     const dayCode = getDayCode(birthDate, gender);
     const placeCode = getPlaceCode(birthPlace);
     
-    // Combina i codici per formare il codice fiscale senza il carattere di controllo
+    // Combina le parti per ottenere il codice parziale
     const partialCode = lastNameCode + firstNameCode + yearCode + monthCode + dayCode + placeCode;
     
     // Calcola il carattere di controllo
@@ -381,120 +398,298 @@ const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace)
     return partialCode + controlChar;
   } catch (error) {
     console.error("Errore nel calcolo del codice fiscale:", error);
+    return "Errore nel calcolo";
+  }
+};
+
+// Funzione per estrarre informazioni dal codice fiscale
+const extractInfoFromFiscalCode = (fiscalCode) => {
+  if (!fiscalCode || fiscalCode.length !== 16) {
+    return null;
+  }
+
+  try {
+    // Estrai le parti del codice fiscale
+    const yearCode = fiscalCode.substring(6, 8);
+    const monthCode = fiscalCode.substring(8, 9);
+    const dayCode = parseInt(fiscalCode.substring(9, 11));
+    const placeCode = fiscalCode.substring(11, 15);
+
+    // Determina il sesso
+    const isFemale = dayCode > 40;
+    const actualDay = isFemale ? dayCode - 40 : dayCode;
+    const gender = isFemale ? "Femmina" : "Maschio";
+
+    // Determina l'anno di nascita (assumendo che sia nel 1900 o 2000)
+    const currentYear = new Date().getFullYear();
+    const century = parseInt(yearCode) + 2000 > currentYear ? 1900 : 2000;
+    const year = century + parseInt(yearCode);
+
+    // Determina il mese di nascita
+    const monthCodes = "ABCDEHLMPRST";
+    const month = monthCodes.indexOf(monthCode);
+
+    // Crea la data di nascita in formato italiano
+    const birthDate = new Date(year, month, actualDay);
+    const formattedBirthDate = `${actualDay.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
+
+    // Trova il luogo di nascita dal codice
+    let birthPlace = null;
+    let provincia = null;
+    let nazione = "ITALIA";
+
+    // Cerca nei comuni italiani
+    for (const [comune, code] of Object.entries(COMUNI_ITALIANI)) {
+      if (code === placeCode) {
+        birthPlace = comune;
+        // Trova la provincia del comune
+        for (const [prov, comuni] of Object.entries(CITTA_ITALIANE)) {
+          if (comuni.includes(comune)) {
+            provincia = prov;
+            break;
+          }
+        }
+        break;
+      }
+    }
+
+    // Se non trovato nei comuni italiani, cerca nelle nazioni estere
+    if (!birthPlace) {
+      for (const [country, code] of Object.entries(NAZIONI_ESTERE)) {
+        if (code === placeCode) {
+          birthPlace = country;
+          nazione = country;
+          provincia = null;
+          break;
+        }
+      }
+    }
+
+    return {
+      gender,
+      birthDate: formattedBirthDate,
+      birthPlace,
+      provincia,
+      nazione,
+      codiceFiscale: fiscalCode
+    };
+  } catch (error) {
+    console.error("Errore nell'estrazione delle informazioni dal codice fiscale:", error);
     return null;
   }
 };
 
-// Mappatura inversa da codici a comuni e nazioni
-const CODICI_A_COMUNI = Object.entries(COMUNI_ITALIANI).reduce((acc, [comune, codice]) => {
-  acc[codice] = comune;
-  return acc;
-}, {});
-
-const CODICI_A_NAZIONI = Object.entries(NAZIONI_ESTERE).reduce((acc, [nazione, codice]) => {
-  acc[codice] = nazione;
-  return acc;
-}, {});
-
-// Tema colori base senza animazioni
-const theme = {
-  primary: '#1e40af',
-  white: '#ffffff',
-  black: '#000000',
-  gray: '#64748b',
-  grayLight: '#e2e8f0',
-  grayDark: '#334155',
-};
-
-const RegisterDropdown = () => {
-  // Stato per il dropdown
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const totalSteps = 12;
-  
-  // Stato per il calcolatore del codice fiscale
-  const [showCalculator, setShowCalculator] = useState(false);
-  
-  // Stato per i dati del form
-  const [formData, setFormData] = useState({
-    // Dati personali
-    firstName: '',
-    lastName: '',
-    birthDate: '',
-    gender: '',
-    citizenship: '',
-    nation: '',
-    province: '',
-    city: '',
-    
-    // Codice fiscale
-    fiscalCode: '',
-    fiscalCodeCalculated: false,
-    isForeigner: false
-  });
-  
-  // Stato per gli errori del form
-  const [formErrors, setFormErrors] = useState({});
-  
-  // Ref per il dropdown
+// Componente per il dropdown con ricerca
+const SearchableDropdown = ({ options, value, onChange, placeholder, icon, tabIndex }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredOptions, setFilteredOptions] = useState(options);
   const dropdownRef = useRef(null);
+  const searchInputRef = useRef(null);
   
-  // Formatta la data di nascita per la visualizzazione
-  const displayBirthDate = formData.birthDate ? formatDate(formData.birthDate) : '';
+  // Filtra le opzioni in base al termine di ricerca
+  useEffect(() => {
+    if (searchTerm === "") {
+      setFilteredOptions(options);
+    } else {
+      const filtered = options.filter(option =>
+        option.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredOptions(filtered);
+    }
+  }, [searchTerm, options]);
   
-  // Funzione per aprire/chiudere il dropdown
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
-  
-  // Effetto per chiudere il dropdown quando si clicca fuori
+  // Chiudi il dropdown quando si clicca fuori
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowDropdown(false);
+        setIsOpen(false);
       }
     };
     
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
   
-  // Effetto per estrarre informazioni dal codice fiscale
-  useEffect(() => {
-    if (formData.fiscalCode && formData.fiscalCode.length === 16 && !formData.isForeigner) {
-      const info = extractInfoFromFiscalCode(formData.fiscalCode);
-      if (info) {
-        setFormData(prevData => ({
-          ...prevData,
-          birthDate: info.birthDate,
-          gender: info.gender,
-          nation: info.nation || 'ITALIA',
-          province: info.province,
-          city: info.city
-        }));
-      }
-    }
-  }, [formData.fiscalCode, formData.isForeigner]);
+  // Gestisci il cambiamento nel campo di ricerca
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
   
-  // Funzione per gestire il cambiamento nei campi del form
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  // Gestisci la selezione di un'opzione
+  const handleOptionSelect = (option) => {
+    onChange(option);
+    setIsOpen(false);
+    setSearchTerm("");
+  };
+  
+  // Toggle del dropdown
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+    if (!isOpen) {
+      setSearchTerm("");
+      // Focus sul campo di ricerca quando si apre il dropdown
+      setTimeout(() => {
+        if (searchInputRef.current) {
+          searchInputRef.current.focus();
+        }
+      }, 100);
+    }
+  };
+
+  // Gestisci la pressione del tasto Tab
+  const handleKeyDown = (e) => {
+    if (e.key === 'Tab' && !isOpen) {
+      // Permetti la navigazione normale con Tab quando il dropdown è chiuso
+      return;
+    }
     
-    // Aggiorna direttamente lo stato formData con tutti i campi esistenti più il campo modificato
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-    
-    // Rimuovi gli errori per il campo aggiornato
-    if (formErrors[name]) {
-      setFormErrors(prevErrors => {
-        const newErrors = { ...prevErrors };
-        delete newErrors[name];
-        return newErrors;
-      });
+    if (e.key === 'Tab' && isOpen) {
+      // Chiudi il dropdown quando si preme Tab e il dropdown è aperto
+      setIsOpen(false);
+      setSearchTerm("");
+    }
+  };
+
+  return (
+    <div className="dropdown-search" ref={dropdownRef}>
+      <div className="input-with-icon">
+        <input
+          type="text"
+          className="form-control input-animated"
+          value={value}
+          onClick={toggleDropdown}
+          placeholder={placeholder}
+          readOnly
+          tabIndex={tabIndex}
+          onKeyDown={handleKeyDown}
+        />
+        <span className="input-icon">
+          {icon}
+        </span>
+      </div>
+      
+      {isOpen && (
+        <div className="dropdown-list">
+          <div className="p-2">
+            <input
+              ref={searchInputRef}
+              type="text"
+              className="form-control"
+              placeholder="Cerca..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              onClick={(e) => e.stopPropagation()}
+              autoFocus
+            />
+          </div>
+          <div>
+            {filteredOptions.length > 0 ? (
+              filteredOptions.map((option, index) => (
+                <div
+                  key={index}
+                  className={`dropdown-item ${option === value ? 'active' : ''}`}
+                  onClick={() => handleOptionSelect(option)}
+                >
+                  {option}
+                </div>
+              ))
+            ) : (
+              <div className="dropdown-item">Nessun risultato trovato</div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Componente principale RegisterDropdown
+const RegisterDropdown = () => {
+  // Stato per il dropdown
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  // Stato per lo step corrente
+  const [currentStep, setCurrentStep] = useState(1);
+  
+  // Stato per i dati del form
+  const [formData, setFormData] = useState({
+    fiscalCode: '',
+    isForeigner: false,
+    // Dati personali (Step 3)
+    nome: '',
+    cognome: '',
+    dataNascita: '',
+    sesso: 'Maschio',
+    primaCittadinanza: 'ITALIA',
+    nazione: 'ITALIA',
+    provincia: '',
+    comuneCitta: '',
+    codiceFiscale: ''
+  });
+  
+  // Stato per le città disponibili in base alla provincia selezionata
+  const [cittaDisponibili, setCittaDisponibili] = useState([]);
+  
+  // Stato per il modal del calcolatore
+  const [showCalculator, setShowCalculator] = useState(false);
+  
+  // Riferimento al dropdown
+  const dropdownRef = useRef(null);
+  
+  // Riferimenti per garantire la fluidità dei campi di input nel PersonalDataStep
+  const nomeRef = useRef(null);
+  const cognomeRef = useRef(null);
+  const dataNascitaRef = useRef(null);
+  
+  // Stato per gli errori di validazione
+  const [errors, setErrors] = useState({});
+  
+  // Stato per tenere traccia del campo attualmente in focus
+  const [activeField, setActiveField] = useState(null);
+  
+  // Numero totale di step
+  const totalSteps = 12;
+  
+  // Effetto per aggiornare le città disponibili quando cambia la provincia
+  useEffect(() => {
+    if (formData.provincia && CITTA_ITALIANE[formData.provincia]) {
+      setCittaDisponibili(CITTA_ITALIANE[formData.provincia]);
+    } else {
+      setCittaDisponibili([]);
+    }
+  }, [formData.provincia]);
+  
+  // Toggle del dropdown
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+    if (!showDropdown) {
+      setCurrentStep(1);
+      // Reset dei dati del form quando si apre il dropdown
+      resetFormData();
+    }
+  };
+  
+  // Previeni la chiusura del dropdown quando si clicca all'interno
+  const handleDropdownClick = (e) => {
+    e.stopPropagation();
+  };
+  
+  // Funzione per andare allo step successivo con animazione
+  const goToNextStep = () => {
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+  
+  // Funzione per tornare allo step precedente con animazione
+  const goToPreviousStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+      // Reset dei dati del form quando si torna indietro
+      resetFormData();
     }
   };
   
@@ -506,363 +701,34 @@ const RegisterDropdown = () => {
     }));
   };
   
-  // Funzione per passare allo step successivo
-  const goToNextStep = () => {
-    // Validazione dei dati in base allo step corrente
-    if (currentStep === 2) {
-      // Validazione del codice fiscale
-      const errors = {};
-      
-      if (!formData.isForeigner && (!formData.fiscalCode || formData.fiscalCode.length !== 16)) {
-        errors.fiscalCode = 'Inserisci un codice fiscale valido di 16 caratteri';
-      }
-      
-      if (Object.keys(errors).length > 0) {
-        setFormErrors(errors);
-        return;
-      }
-    } else if (currentStep === 3) {
-      // Validazione dei dati personali
-      const errors = {};
-      
-      if (!formData.firstName) {
-        errors.firstName = 'Il nome è obbligatorio';
-      }
-      
-      if (!formData.lastName) {
-        errors.lastName = 'Il cognome è obbligatorio';
-      }
-      
-      if (!formData.birthDate) {
-        errors.birthDate = 'La data di nascita è obbligatoria';
-      }
-      
-      if (!formData.gender) {
-        errors.gender = 'Il sesso è obbligatorio';
-      }
-      
-      if (!formData.citizenship) {
-        errors.citizenship = 'La cittadinanza è obbligatoria';
-      }
-      
-      if (!formData.nation) {
-        errors.nation = 'La nazione è obbligatoria';
-      }
-      
-      if (formData.nation === 'ITALIA' && !formData.province) {
-        errors.province = 'La provincia è obbligatoria';
-      }
-      
-      if (formData.nation === 'ITALIA' && !formData.city) {
-        errors.city = 'Il comune è obbligatorio';
-      } else if (formData.nation !== 'ITALIA' && !formData.city) {
-        errors.city = 'La città è obbligatoria';
-      }
-      
-      if (Object.keys(errors).length > 0) {
-        setFormErrors(errors);
-        return;
-      }
-    }
-    
-    // Se la validazione passa, vai allo step successivo
-    setCurrentStep(currentStep + 1);
-    // Resetta gli errori
-    setFormErrors({});
-  };
-  
-  // Funzione per tornare allo step precedente
-  const goToPreviousStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
-      // Resetta gli errori
-      setFormErrors({});
-    }
+  // Funzione per resettare i dati del form
+  const resetFormData = () => {
+    setFormData({
+      fiscalCode: '',
+      isForeigner: false,
+      nome: '',
+      cognome: '',
+      dataNascita: '',
+      sesso: 'Maschio',
+      primaCittadinanza: 'ITALIA',
+      nazione: 'ITALIA',
+      provincia: '',
+      comuneCitta: '',
+      codiceFiscale: ''
+    });
+    setErrors({});
   };
   
   // Funzione per aprire il calcolatore
   const openCalculator = (e) => {
     e.preventDefault();
+    e.stopPropagation();
     setShowCalculator(true);
   };
   
   // Funzione per chiudere il calcolatore
   const closeCalculator = () => {
     setShowCalculator(false);
-  };
-  
-  // Funzione per gestire il cambiamento nel checkbox dello studente straniero
-  const handleForeignerChange = (e) => {
-    const isChecked = e.target.checked;
-    updateFormData({
-      isForeigner: isChecked,
-      fiscalCode: isChecked ? '' : formData.fiscalCode
-    });
-  };
-  
-  // Componente per il terzo step: Dati Personali
-  const PersonalDataStep = () => {
-    // Funzione per gestire il submit del form
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      goToNextStep();
-    };
-
-    return (
-      <div>
-        <div className="bg-primary text-white p-3 rounded-top d-flex align-items-center" style={{ backgroundColor: theme.primary }}>
-          <FontAwesomeIcon icon={faUser} className="me-2" />
-          <h5 className="mb-0">Dati Personali</h5>
-        </div>
-        <div className="p-4 border border-top-0 rounded-bottom">
-          <Form onSubmit={handleSubmit}>
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Nome*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    placeholder="Inserisci il tuo nome"
-                    autoComplete="given-name"
-                    isInvalid={!!formErrors.firstName}
-                    disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.firstName}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Cognome*</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="lastName"
-                    value={formData.lastName}
-                    onChange={handleInputChange}
-                    placeholder="Inserisci il tuo cognome"
-                    autoComplete="family-name"
-                    isInvalid={!!formErrors.lastName}
-                    disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.lastName}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Data Nascita*</Form.Label>
-                  <div className="position-relative">
-                    <Form.Control
-                      type="date"
-                      name="birthDate"
-                      value={formData.birthDate}
-                      onChange={handleInputChange}
-                      isInvalid={!!formErrors.birthDate}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                    />
-                    <FontAwesomeIcon
-                      icon={faCalendarAlt}
-                      className="position-absolute end-0 top-50 translate-middle-y me-3 text-secondary"
-                      style={{ pointerEvents: 'none' }}
-                    />
-                  </div>
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.birthDate}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Sesso*</Form.Label>
-                  <div className="d-flex align-items-center gap-4 mt-2">
-                    <Form.Check
-                      inline
-                      label="Maschio"
-                      name="gender"
-                      type="radio"
-                      id="gender-m"
-                      value="M"
-                      checked={formData.gender === 'M'}
-                      onChange={handleInputChange}
-                      isInvalid={!!formErrors.gender}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                    />
-                    <Form.Check
-                      inline
-                      label="Femmina"
-                      name="gender"
-                      type="radio"
-                      id="gender-f"
-                      value="F"
-                      checked={formData.gender === 'F'}
-                      onChange={handleInputChange}
-                      isInvalid={!!formErrors.gender}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                      style={{ marginRight: '20px' }}
-                    />
-                  </div>
-                  {formErrors.gender && (
-                    <div className="text-danger small mt-1">{formErrors.gender}</div>
-                  )}
-                </Form.Group>
-              </Col>
-            </Row>
-
-            <Row className="mb-3">
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Prima cittadinanza*</Form.Label>
-                  <Form.Select
-                    name="citizenship"
-                    value={formData.citizenship}
-                    onChange={handleInputChange}
-                    isInvalid={!!formErrors.citizenship}
-                  >
-                    <option value="">Seleziona la cittadinanza</option>
-                    {CITTADINANZE.map((cittadinanza, index) => (
-                      <option key={index} value={cittadinanza}>{cittadinanza}</option>
-                    ))}
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.citizenship}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-              <Col md={6}>
-                <Form.Group>
-                  <Form.Label className="fw-bold">Nazione*</Form.Label>
-                  <Form.Select
-                    name="nation"
-                    value={formData.nation}
-                    onChange={handleInputChange}
-                    isInvalid={!!formErrors.nation}
-                    disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                  >
-                    <option value="">Seleziona la nazione</option>
-                    <option value="ITALIA">ITALIA</option>
-                    {Object.keys(NAZIONI_ESTERE).map((nazione, index) => (
-                      <option key={index} value={nazione}>{nazione}</option>
-                    ))}
-                  </Form.Select>
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.nation}
-                  </Form.Control.Feedback>
-                </Form.Group>
-              </Col>
-            </Row>
-
-            {formData.nation === 'ITALIA' && (
-              <Row className="mb-3">
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label className="fw-bold">Provincia*</Form.Label>
-                    <Form.Select
-                      name="province"
-                      value={formData.province}
-                      onChange={handleInputChange}
-                      isInvalid={!!formErrors.province}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                    >
-                      <option value="">Seleziona la provincia</option>
-                      {PROVINCE_ITALIANE.map((provincia, index) => (
-                        <option key={index} value={provincia}>{provincia}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      {formErrors.province}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label className="fw-bold">Comune/Città*</Form.Label>
-                    <Form.Select
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      isInvalid={!!formErrors.city}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                    >
-                      <option value="">Seleziona il comune</option>
-                      {Object.keys(COMUNI_ITALIANI).map((comune, index) => (
-                        <option key={index} value={comune}>{comune}</option>
-                      ))}
-                    </Form.Select>
-                    <Form.Control.Feedback type="invalid">
-                      {formErrors.city}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-              </Row>
-            )}
-
-            {formData.nation !== 'ITALIA' && formData.nation !== '' && (
-              <Row className="mb-3">
-                <Col md={12}>
-                  <Form.Group>
-                    <Form.Label className="fw-bold">Città non in elenco*</Form.Label>
-                    <Form.Control
-                      type="text"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      placeholder="Inserisci la città"
-                      isInvalid={!!formErrors.city}
-                      disabled={!formData.isForeigner && formData.fiscalCode.length === 16}
-                    />
-                    <Form.Control.Feedback type="invalid">
-                      {formErrors.city}
-                    </Form.Control.Feedback>
-                  </Form.Group>
-                </Col>
-              </Row>
-            )}
-
-            <Form.Group className="mb-3">
-              <Form.Label className="fw-bold">Codice Fiscale*</Form.Label>
-              <Form.Control
-                type="text"
-                name="fiscalCode"
-                value={formData.fiscalCode}
-                readOnly
-                className="bg-light"
-                placeholder="PRCMSM56R25G273Y"
-              />
-              <Form.Text className="text-muted">(calcolato se non indicato)</Form.Text>
-            </Form.Group>
-
-            <div className="d-flex justify-content-between mt-4">
-              <Button
-                variant="outline-secondary"
-                onClick={goToPreviousStep}
-                className="d-flex align-items-center gap-2"
-              >
-                <FontAwesomeIcon icon={faArrowLeft} />
-                <span>Indietro</span>
-              </Button>
-              
-              <Button
-                variant="primary"
-                type="submit"
-                className="d-flex align-items-center gap-2"
-                style={{ backgroundColor: theme.primary, borderColor: theme.primary }}
-              >
-                <span>Avanti</span>
-                <FontAwesomeIcon icon={faArrowRight} />
-              </Button>
-            </div>
-          </Form>
-        </div>
-      </div>
-    );
   };
   
   // Componente per il calcolatore del codice fiscale
@@ -921,13 +787,12 @@ const RegisterDropdown = () => {
       }
       
       setCalculatorErrors(newErrors);
+      
       return Object.keys(newErrors).length === 0;
     };
     
     // Funzione per calcolare il codice fiscale
-    const handleCalculate = (e) => {
-      e.preventDefault();
-      
+    const handleCalculate = () => {
       if (validateCalculatorData()) {
         const fiscalCode = calculateFiscalCode(
           calculatorData.firstName,
@@ -937,34 +802,17 @@ const RegisterDropdown = () => {
           calculatorData.birthPlace
         );
         
-        // Aggiorna il campo del codice fiscale nel form
-        updateFormData({
-          fiscalCode,
-          fiscalCodeCalculated: true,
-          // Aggiorna anche i dati personali per lo step 3
-          firstName: calculatorData.firstName,
-          lastName: calculatorData.lastName,
-          birthDate: calculatorData.birthDate,
-          gender: calculatorData.gender
-        });
-        
-        // Chiudi il modal
+        updateFormData({ fiscalCode });
         closeCalculator();
       }
     };
 
     return (
-      <Modal
-        show={showCalculator}
-        onHide={closeCalculator}
-        centered
-        size="lg"
-        backdrop="static"
-      >
-        <Modal.Header closeButton style={{ backgroundColor: theme.primary, color: theme.white }}>
-          <Modal.Title className="d-flex align-items-center">
+      <Modal show={showCalculator} onHide={closeCalculator} centered className="calculator-modal">
+        <Modal.Header>
+          <Modal.Title>
             <FontAwesomeIcon icon={faCalculator} className="me-2" />
-            Calcola Codice Fiscale
+            Calcolo Codice Fiscale
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -972,14 +820,15 @@ const RegisterDropdown = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Nome</Form.Label>
+                  <Form.Label className="fw-bold">Nome</Form.Label>
                   <Form.Control
                     type="text"
                     name="firstName"
                     value={calculatorData.firstName}
                     onChange={handleCalculatorChange}
                     isInvalid={!!calculatorErrors.firstName}
-                    placeholder="Inserisci il tuo nome"
+                    className="input-animated"
+                    tabIndex={1}
                   />
                   <Form.Control.Feedback type="invalid">
                     {calculatorErrors.firstName}
@@ -988,14 +837,15 @@ const RegisterDropdown = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Cognome</Form.Label>
+                  <Form.Label className="fw-bold">Cognome</Form.Label>
                   <Form.Control
                     type="text"
                     name="lastName"
                     value={calculatorData.lastName}
                     onChange={handleCalculatorChange}
                     isInvalid={!!calculatorErrors.lastName}
-                    placeholder="Inserisci il tuo cognome"
+                    className="input-animated"
+                    tabIndex={2}
                   />
                   <Form.Control.Feedback type="invalid">
                     {calculatorErrors.lastName}
@@ -1007,13 +857,15 @@ const RegisterDropdown = () => {
             <Row>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Data di Nascita</Form.Label>
+                  <Form.Label className="fw-bold">Data di Nascita</Form.Label>
                   <Form.Control
                     type="date"
                     name="birthDate"
                     value={calculatorData.birthDate}
                     onChange={handleCalculatorChange}
                     isInvalid={!!calculatorErrors.birthDate}
+                    className="input-animated"
+                    tabIndex={3}
                   />
                   <Form.Control.Feedback type="invalid">
                     {calculatorErrors.birthDate}
@@ -1022,9 +874,10 @@ const RegisterDropdown = () => {
               </Col>
               <Col md={6}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Sesso</Form.Label>
-                  <div className="d-flex gap-4 mt-2">
+                  <Form.Label className="fw-bold">Sesso</Form.Label>
+                  <div>
                     <Form.Check
+                      inline
                       type="radio"
                       label="Maschio"
                       name="gender"
@@ -1033,8 +886,10 @@ const RegisterDropdown = () => {
                       checked={calculatorData.gender === 'M'}
                       onChange={handleCalculatorChange}
                       isInvalid={!!calculatorErrors.gender}
+                      tabIndex={4}
                     />
                     <Form.Check
+                      inline
                       type="radio"
                       label="Femmina"
                       name="gender"
@@ -1043,18 +898,18 @@ const RegisterDropdown = () => {
                       checked={calculatorData.gender === 'F'}
                       onChange={handleCalculatorChange}
                       isInvalid={!!calculatorErrors.gender}
-                      style={{ marginRight: '20px' }}
+                      tabIndex={5}
                     />
                   </div>
                   {calculatorErrors.gender && (
-                    <div className="text-danger small mt-2">{calculatorErrors.gender}</div>
+                    <div className="text-danger small mt-1">{calculatorErrors.gender}</div>
                   )}
                 </Form.Group>
               </Col>
             </Row>
             
             <Form.Group className="mb-3">
-              <Form.Label>Luogo di Nascita (Comune o Stato Estero)</Form.Label>
+              <Form.Label className="fw-bold">Luogo di Nascita (Comune o Stato Estero)</Form.Label>
               <Form.Control
                 type="text"
                 name="birthPlace"
@@ -1062,11 +917,13 @@ const RegisterDropdown = () => {
                 onChange={handleCalculatorChange}
                 isInvalid={!!calculatorErrors.birthPlace}
                 placeholder="Es. Roma, Milano, Germania, Francia"
+                className="input-animated"
+                tabIndex={6}
               />
               <Form.Control.Feedback type="invalid">
                 {calculatorErrors.birthPlace}
               </Form.Control.Feedback>
-              <Form.Text className="text-muted mt-2 d-block">
+              <Form.Text className="text-muted">
                 Inserisci il nome del comune italiano o dello stato estero di nascita
               </Form.Text>
             </Form.Group>
@@ -1074,15 +931,16 @@ const RegisterDropdown = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="outline-secondary"
+            variant="secondary"
             onClick={closeCalculator}
+            tabIndex={8}
           >
             Annulla
           </Button>
           <Button
             variant="primary"
             onClick={handleCalculate}
-            style={{ backgroundColor: theme.primary, borderColor: theme.primary }}
+            tabIndex={7}
           >
             <FontAwesomeIcon icon={faCalculator} className="me-2" />
             Calcola Codice Fiscale
@@ -1092,47 +950,97 @@ const RegisterDropdown = () => {
     );
   };
   
+  // Componente per l'indicatore di progresso
+  const StepIndicator = () => {
+    // Calcola la percentuale di completamento
+    const progressPercentage = (currentStep / totalSteps) * 100;
+    
+    // Genera gli step circles
+    const renderStepCircles = () => {
+      const circles = [];
+      for (let i = 1; i <= totalSteps; i++) {
+        const isActive = i <= currentStep;
+        const isCurrent = i === currentStep;
+        
+        circles.push(
+          <div
+            key={i}
+            className={`step-circle ${isActive ? 'active' : ''} ${isCurrent ? 'current' : ''}`}
+            title={`Step ${i} di ${totalSteps}`}
+          >
+            <span>{i}</span>
+          </div>
+        );
+      }
+      return circles;
+    };
+
+    return (
+      <div className="step-indicator">
+        <div className="step-info">
+          <span className="current-step">Step {currentStep}</span>
+          <span className="total-steps">di {totalSteps}</span>
+        </div>
+        
+        <div className="progress mb-3">
+          <div
+            className="progress-bar"
+            role="progressbar"
+            style={{ width: `${progressPercentage}%` }}
+            aria-valuenow={progressPercentage}
+            aria-valuemin="0"
+            aria-valuemax="100"
+          ></div>
+        </div>
+        
+        <div className="step-circles-container">
+          {renderStepCircles()}
+        </div>
+      </div>
+    );
+  };
+  
   // Componente per il primo step: Informativa sulla Privacy
   const PrivacyNoticeStep = () => {
     return (
-      <div>
-        <div className="bg-primary text-white p-3 rounded-top d-flex align-items-center" style={{ backgroundColor: theme.primary }}>
-          <FontAwesomeIcon icon={faInfoCircle} className="me-2" />
-          <h5 className="mb-0">Informativa sulla Privacy</h5>
-        </div>
-        <div className="p-4 border border-top-0 rounded-bottom">
-          <div className="mb-4 p-3 bg-light rounded border">
-            <p className="mb-3">
-              Prima di proseguire ti invitiamo a prendere visione dell'informativa per gli studenti
-              all'atto della registrazione ai sensi del Regolamento UE 2016/679 del Parlamento Europeo
-              e del Consiglio del 27/04/2016.
-            </p>
-            <p className="mb-3">
-              <a
-                href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016R0679"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="fw-bold text-decoration-none"
-                style={{ color: theme.primary }}
-              >
-                Leggi l'informativa
-              </a>
-            </p>
-            <p className="small text-muted mb-0">
-              Proseguendo con la registrazione, confermi di aver letto e compreso l'informativa sulla privacy.
-            </p>
-          </div>
-          
-          <div className="d-flex justify-content-center mt-4">
-            <button
-              className="btn btn-primary d-flex align-items-center gap-2 px-4 py-2"
-              onClick={goToNextStep}
-              style={{ backgroundColor: theme.primary, borderColor: theme.primary }}
+      <div className="step-content">
+        <h4 className="step-title">
+          <FontAwesomeIcon icon={faUniversity} className="me-2" />
+          Informativa sulla Privacy
+        </h4>
+        <div className="privacy-notice">
+          <p className="mb-3">
+            Prima di proseguire ti invitiamo a prendere visione dell'informativa per gli studenti
+            all'atto della registrazione ai sensi del Regolamento UE 2016/679 del Parlamento Europeo
+            e del Consiglio del 27/04/2016.
+          </p>
+          <p className="mb-3">
+            <a
+              href="https://eur-lex.europa.eu/legal-content/IT/TXT/?uri=CELEX%3A32016R0679"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="privacy-link"
+              onClick={(e) => e.stopPropagation()}
+              tabIndex={1}
             >
-              <span>Avanti</span>
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          </div>
+              Leggi l'informativa
+            </a>
+          </p>
+          <p className="small text-muted mb-0">
+            Proseguendo con la registrazione, confermi di aver letto e compreso l'informativa sulla privacy.
+          </p>
+        </div>
+        
+        <div className="buttons-container">
+          <div></div> {/* Placeholder per allineare il pulsante a destra */}
+          <button
+            className="btn-next"
+            onClick={goToNextStep}
+            tabIndex={2}
+          >
+            <span className="me-2">Avanti</span>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
         </div>
       </div>
     );
@@ -1140,191 +1048,623 @@ const RegisterDropdown = () => {
   
   // Componente per il secondo step: Codice Fiscale
   const FiscalCodeStep = () => {
+    // Funzione per gestire il cambiamento nel campo del codice fiscale
+    const handleFiscalCodeChange = (e) => {
+      updateFormData({ fiscalCode: e.target.value });
+      
+      // Rimuovi l'errore quando l'utente inizia a digitare
+      if (errors.fiscalCode) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          fiscalCode: null
+        }));
+      }
+    };
+    
+    // Funzione per gestire il cambiamento nel checkbox dello studente straniero
+    const handleForeignerChange = (e) => {
+      const isChecked = e.target.checked;
+      updateFormData({
+        isForeigner: isChecked,
+        fiscalCode: isChecked ? '' : formData.fiscalCode
+      });
+      
+      // Rimuovi l'errore quando l'utente cambia lo stato del checkbox
+      if (errors.fiscalCode) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          fiscalCode: null
+        }));
+      }
+    };
+    
+    // Funzione per validare il codice fiscale
+    const validateFiscalCode = () => {
+      // Se l'utente ha dichiarato di essere uno studente straniero, non è necessario il codice fiscale
+      if (formData.isForeigner) {
+        return true;
+      }
+      
+      // Altrimenti, verifica che il codice fiscale sia stato inserito
+      if (!formData.fiscalCode.trim()) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          fiscalCode: 'Il codice fiscale è obbligatorio'
+        }));
+        return false;
+      }
+      
+      // Verifica che il codice fiscale abbia il formato corretto (16 caratteri alfanumerici)
+      const fiscalCodeRegex = /^[A-Z0-9]{16}$/i;
+      if (!fiscalCodeRegex.test(formData.fiscalCode)) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          fiscalCode: 'Il codice fiscale deve essere composto da 16 caratteri alfanumerici'
+        }));
+        return false;
+      }
+      
+      return true;
+    };
+    
     // Funzione per gestire il submit del form
     const handleSubmit = (e) => {
-      e.preventDefault();
-      goToNextStep();
+      if (e) e.preventDefault();
+      
+      // Valida il codice fiscale
+      if (validateFiscalCode()) {
+        // Se l'utente ha inserito un codice fiscale, estrai le informazioni
+        if (formData.fiscalCode && !formData.isForeigner) {
+          const fiscalCodeInfo = extractInfoFromFiscalCode(formData.fiscalCode.toUpperCase());
+          if (fiscalCodeInfo) {
+            updateFormData({
+              dataNascita: fiscalCodeInfo.birthDate,
+              sesso: fiscalCodeInfo.gender,
+              nazione: fiscalCodeInfo.nazione,
+              provincia: fiscalCodeInfo.provincia,
+              comuneCitta: fiscalCodeInfo.birthPlace,
+              codiceFiscale: fiscalCodeInfo.codiceFiscale
+            });
+          }
+        }
+        
+        goToNextStep();
+      }
+    };
+
+    // Gestisci la pressione del tasto Tab
+    const handleKeyDown = (e) => {
+      if (e.key === 'Tab' && !e.shiftKey) {
+        // Tab in avanti
+        if (e.target.id === 'fiscalCode') {
+          e.preventDefault();
+          document.getElementById('isForeigner').focus();
+        } else if (e.target.id === 'isForeigner') {
+          e.preventDefault();
+          document.getElementById('calcBtn') ?
+            document.getElementById('calcBtn').focus() :
+            document.getElementById('prevBtn').focus();
+        } else if (e.target.id === 'calcBtn') {
+          e.preventDefault();
+          document.getElementById('prevBtn').focus();
+        } else if (e.target.id === 'prevBtn') {
+          e.preventDefault();
+          document.getElementById('nextBtn').focus();
+        }
+      } else if (e.key === 'Tab' && e.shiftKey) {
+        // Tab indietro
+        if (e.target.id === 'nextBtn') {
+          e.preventDefault();
+          document.getElementById('prevBtn').focus();
+        } else if (e.target.id === 'prevBtn') {
+          e.preventDefault();
+          document.getElementById('calcBtn') ?
+            document.getElementById('calcBtn').focus() :
+            document.getElementById('isForeigner').focus();
+        } else if (e.target.id === 'calcBtn') {
+          e.preventDefault();
+          document.getElementById('isForeigner').focus();
+        } else if (e.target.id === 'isForeigner') {
+          e.preventDefault();
+          document.getElementById('fiscalCode').focus();
+        }
+      }
     };
 
     return (
-      <div>
-        <div className="bg-primary text-white p-3 rounded-top d-flex align-items-center" style={{ backgroundColor: theme.primary }}>
+      <div className="step-content">
+        <h4 className="step-title">
           <FontAwesomeIcon icon={faIdCard} className="me-2" />
-          <h5 className="mb-0">Codice Fiscale</h5>
-        </div>
-        <div className="p-4 border border-top-0 rounded-bottom">
-          <form onSubmit={handleSubmit}>
-            <p className="mb-3">Inserisci il tuo codice fiscale o utilizza il calcolatore se non lo conosci:</p>
-            
-            <div className="p-3 bg-light rounded mb-4 border">
-              <div className="mb-3">
-                <label htmlFor="fiscalCode" className="form-label fw-bold mb-2">
-                  Codice Fiscale
-                </label>
-                <input
-                  type="text"
-                  className={`form-control ${formErrors.fiscalCode ? 'is-invalid' : ''}`}
-                  id="fiscalCode"
-                  name="fiscalCode"
-                  value={formData.fiscalCode}
-                  onChange={handleInputChange}
-                  disabled={formData.isForeigner}
-                  placeholder="Inserisci il tuo codice fiscale"
-                />
-                {formErrors.fiscalCode && (
-                  <div className="invalid-feedback">{formErrors.fiscalCode}</div>
-                )}
-              </div>
-              
-              <div className="mb-0">
-                <div className="form-check">
-                  <input
-                    type="checkbox"
-                    className="form-check-input"
-                    id="isForeigner"
-                    checked={formData.isForeigner}
-                    onChange={handleForeignerChange}
-                  />
-                  <label className="form-check-label" htmlFor="isForeigner">
-                    Dichiaro di essere uno studente straniero senza Codice Fiscale Italiano
-                  </label>
-                </div>
-              </div>
-            </div>
-            
-            {!formData.isForeigner && (
-              <div className="text-center mb-4">
-                <button
-                  type="button"
-                  className="btn btn-outline-primary d-inline-flex align-items-center gap-2"
-                  onClick={openCalculator}
-                  style={{ borderColor: theme.primary, color: theme.primary }}
-                >
-                  <FontAwesomeIcon icon={faCalculator} />
-                  Calcola Codice Fiscale
-                </button>
-              </div>
+          Codice Fiscale
+        </h4>
+        
+        <p className="mb-3">Digitare il proprio codice fiscale e cliccare su procedi:</p>
+        
+        <div className="form-container">
+          <div className="mb-3">
+            <label htmlFor="fiscalCode" className="form-label fw-bold">Codice Fiscale</label>
+            <input
+              type="text"
+              className={`form-control mb-2 input-animated ${errors.fiscalCode ? 'is-invalid' : ''}`}
+              id="fiscalCode"
+              value={formData.fiscalCode}
+              onChange={handleFiscalCodeChange}
+              disabled={formData.isForeigner}
+              tabIndex={1}
+              onKeyDown={handleKeyDown}
+            />
+            {errors.fiscalCode && (
+              <div className="invalid-feedback">{errors.fiscalCode}</div>
             )}
-            
-            <div className="d-flex justify-content-between mt-4">
-              <button
-                type="button"
-                className="btn btn-outline-secondary d-flex align-items-center gap-2"
-                onClick={goToPreviousStep}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} />
-                <span>Indietro</span>
-              </button>
-              
-              <button
-                type="submit"
-                className="btn btn-primary d-flex align-items-center gap-2"
-                style={{ backgroundColor: theme.primary, borderColor: theme.primary }}
-              >
-                <span>Avanti</span>
-                <FontAwesomeIcon icon={faArrowRight} />
-              </button>
+          </div>
+          
+          <div className="mb-0">
+            <div className="form-check">
+              <input
+                type="checkbox"
+                className="form-check-input"
+                id="isForeigner"
+                checked={formData.isForeigner}
+                onChange={handleForeignerChange}
+                tabIndex={2}
+                onKeyDown={handleKeyDown}
+              />
+              <label className="form-check-label" htmlFor="isForeigner">
+                Dichiaro di essere uno studente straniero senza Codice Fiscale Italiano
+              </label>
             </div>
-          </form>
+          </div>
+        </div>
+        
+        {!formData.isForeigner && (
+          <div className="text-center mb-4">
+            <button
+              type="button"
+              className="btn-prev"
+              onClick={openCalculator}
+              id="calcBtn"
+              tabIndex={3}
+              onKeyDown={handleKeyDown}
+            >
+              <FontAwesomeIcon icon={faCalculator} className="me-2" />
+              Calcolo codice fiscale
+            </button>
+          </div>
+        )}
+        
+        <div className="buttons-container">
+          <button
+            type="button"
+            className="btn-prev"
+            onClick={goToPreviousStep}
+            id="prevBtn"
+            tabIndex={4}
+            onKeyDown={handleKeyDown}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
+            <span>Indietro</span>
+          </button>
+          
+          <button
+            type="button"
+            className="btn-next"
+            onClick={handleSubmit}
+            id="nextBtn"
+            tabIndex={5}
+            onKeyDown={handleKeyDown}
+          >
+            <span className="me-2">Avanti</span>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
         </div>
       </div>
     );
   };
+  
+  // Componente per il terzo step: Dati Personali
+  const PersonalDataStep = () => {
+    // Funzione per gestire il focus sui campi di input
+    const handleFocus = (fieldName) => {
+      setActiveField(fieldName);
+    };
+    
+    // Funzione per gestire la perdita del focus sui campi di input
+    const handleBlur = () => {
+      setActiveField(null);
+    };
+    
+    // Funzione per gestire il cambiamento nei campi di input mantenendo il focus
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      
+      // Aggiorna i dati del form
+      updateFormData({ [name]: value });
+      
+      // Rimuovi l'errore quando l'utente inizia a digitare
+      if (errors[name]) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          [name]: null
+        }));
+      }
+    };
+    
+    // Funzione per gestire il cambiamento nei campi dropdown
+    const handleDropdownChange = (name, value) => {
+      updateFormData({ [name]: value });
+      
+      // Rimuovi l'errore quando l'utente seleziona un valore
+      if (errors[name]) {
+        setErrors(prevErrors => ({
+          ...prevErrors,
+          [name]: null
+        }));
+      }
+    };
+    
+    // Funzione per gestire il submit del form
+    const handleSubmit = (e) => {
+      if (e) e.preventDefault();
+      
+      // Validazione dei dati
+      let isValid = true;
+      let newErrors = {};
+      
+      if (!formData.nome) {
+        newErrors.nome = 'Il nome è obbligatorio';
+        isValid = false;
+      }
+      
+      if (!formData.cognome) {
+        newErrors.cognome = 'Il cognome è obbligatorio';
+        isValid = false;
+      }
+      
+      setErrors(newErrors);
+      
+      if (isValid) {
+        goToNextStep();
+      }
+      
+      return isValid;
+    };
+    
+    // Effetto per mantenere il focus sul campo attivo
+    useEffect(() => {
+      if (activeField === 'nome' && nomeRef.current) {
+        nomeRef.current.focus();
+      } else if (activeField === 'cognome' && cognomeRef.current) {
+        cognomeRef.current.focus();
+      } else if (activeField === 'dataNascita' && dataNascitaRef.current) {
+        dataNascitaRef.current.focus();
+      }
+    }, [activeField, formData]);
+
+    // Gestisci la pressione del tasto Tab
+    const handleKeyDown = (e, fieldName) => {
+      if (e.key === 'Tab') {
+        // Permetti la navigazione normale con Tab
+        if (fieldName === 'nome' && !e.shiftKey) {
+          // Da nome a cognome
+          e.preventDefault();
+          cognomeRef.current.focus();
+        } else if (fieldName === 'cognome' && e.shiftKey) {
+          // Da cognome a nome
+          e.preventDefault();
+          nomeRef.current.focus();
+        }
+      }
+    };
+
+    return (
+      <div className="step-content">
+        {/* Intestazione */}
+        <h4 className="step-title">
+          <FontAwesomeIcon icon={faUser} className="me-2" />
+          Registrazione: Dati personali
+        </h4>
+        <p className="text-center text-muted mb-4">
+          In questa pagina viene visualizzato il modulo per l'inserimento o la modifica dei dati personali e del luogo di nascita dell'utente.
+        </p>
+        
+        {/* Form */}
+        <div className="form-container">
+          <h5 className="mb-4 pb-2 border-bottom">
+            <FontAwesomeIcon icon={faUser} className="me-2" />
+            Dati personali
+          </h5>
+          
+          <form>
+            {/* Nome */}
+            <div className="form-group-row">
+              <label htmlFor="nome" className="form-label">Nome*</label>
+              <div className="form-input">
+                <input
+                  ref={nomeRef}
+                  type="text"
+                  className={`input-animated ${errors.nome ? 'is-invalid' : ''}`}
+                  id="nome"
+                  name="nome"
+                  value={formData.nome}
+                  onChange={handleInputChange}
+                  onFocus={() => handleFocus('nome')}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(e, 'nome')}
+                  autoComplete="off"
+                  tabIndex={1}
+                />
+                {errors.nome && <div className="invalid-feedback">{errors.nome}</div>}
+              </div>
+            </div>
+            
+            {/* Cognome */}
+            <div className="form-group-row">
+              <label htmlFor="cognome" className="form-label">Cognome*</label>
+              <div className="form-input">
+                <input
+                  ref={cognomeRef}
+                  type="text"
+                  className={`input-animated ${errors.cognome ? 'is-invalid' : ''}`}
+                  id="cognome"
+                  name="cognome"
+                  value={formData.cognome}
+                  onChange={handleInputChange}
+                  onFocus={() => handleFocus('cognome')}
+                  onBlur={handleBlur}
+                  onKeyDown={(e) => handleKeyDown(e, 'cognome')}
+                  autoComplete="off"
+                  tabIndex={2}
+                />
+                {errors.cognome && <div className="invalid-feedback">{errors.cognome}</div>}
+              </div>
+            </div>
+            
+            {/* Data Nascita */}
+            <div className="form-group-row">
+              <label htmlFor="dataNascita" className="form-label">Data Nascita*</label>
+              <div className="form-input">
+                <div className="input-with-icon">
+                  <input
+                    ref={dataNascitaRef}
+                    type="text"
+                    className={`input-animated ${errors.dataNascita ? 'is-invalid' : ''}`}
+                    id="dataNascita"
+                    name="dataNascita"
+                    value={formData.dataNascita}
+                    onChange={handleInputChange}
+                    onFocus={() => handleFocus('dataNascita')}
+                    onBlur={handleBlur}
+                    autoComplete="off"
+                    readOnly={!formData.isForeigner && formData.codiceFiscale}
+                    tabIndex={3}
+                  />
+                  <span className="input-icon">
+                    <FontAwesomeIcon icon={faCalendarAlt} />
+                  </span>
+                </div>
+                <small className="text-muted">(gg/MM/yyyy)</small>
+                {errors.dataNascita && <div className="invalid-feedback">{errors.dataNascita}</div>}
+              </div>
+            </div>
+            
+            {/* Sesso */}
+            <div className="form-group-row">
+              <label className="form-label">Sesso*</label>
+              <div className="form-input">
+                <div className="d-flex">
+                  <div className="form-check me-3">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="sesso"
+                      id="sesso-maschio"
+                      value="Maschio"
+                      checked={formData.sesso === 'Maschio'}
+                      onChange={handleInputChange}
+                      disabled={!formData.isForeigner && formData.codiceFiscale}
+                      tabIndex={4}
+                    />
+                    <label className="form-check-label" htmlFor="sesso-maschio">Maschio</label>
+                  </div>
+                  <div className="form-check">
+                    <input
+                      className="form-check-input"
+                      type="radio"
+                      name="sesso"
+                      id="sesso-femmina"
+                      value="Femmina"
+                      checked={formData.sesso === 'Femmina'}
+                      onChange={handleInputChange}
+                      disabled={!formData.isForeigner && formData.codiceFiscale}
+                      tabIndex={5}
+                    />
+                    <label className="form-check-label" htmlFor="sesso-femmina">Femmina</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Prima cittadinanza */}
+            <div className="form-group-row">
+              <label htmlFor="primaCittadinanza" className="form-label">Prima cittadinanza*</label>
+              <div className="form-input">
+                <SearchableDropdown
+                  options={NAZIONI}
+                  value={formData.primaCittadinanza}
+                  onChange={(value) => handleDropdownChange('primaCittadinanza', value)}
+                  placeholder="Seleziona cittadinanza"
+                  icon={<FontAwesomeIcon icon={faGlobe} />}
+                  tabIndex={6}
+                />
+              </div>
+            </div>
+            
+            {/* Nazione */}
+            <div className="form-group-row">
+              <label htmlFor="nazione" className="form-label">Nazione*</label>
+              <div className="form-input">
+                <SearchableDropdown
+                  options={NAZIONI}
+                  value={formData.nazione}
+                  onChange={(value) => handleDropdownChange('nazione', value)}
+                  placeholder="Seleziona nazione"
+                  icon={<FontAwesomeIcon icon={faGlobe} />}
+                  disabled={!formData.isForeigner && formData.codiceFiscale}
+                  tabIndex={7}
+                />
+              </div>
+            </div>
+            
+            {/* Provincia */}
+            <div className="form-group-row">
+              <label htmlFor="provincia" className="form-label">Provincia*</label>
+              <div className="form-input">
+                <SearchableDropdown
+                  options={PROVINCE_ITALIANE}
+                  value={formData.provincia}
+                  onChange={(value) => handleDropdownChange('provincia', value)}
+                  placeholder="Seleziona provincia"
+                  icon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
+                  disabled={!formData.isForeigner && formData.codiceFiscale}
+                  tabIndex={8}
+                />
+              </div>
+            </div>
+            
+            {/* Comune/Città */}
+            <div className="form-group-row">
+              <label htmlFor="comuneCitta" className="form-label">Comune/Città*</label>
+              <div className="form-input">
+                <SearchableDropdown
+                  options={cittaDisponibili}
+                  value={formData.comuneCitta}
+                  onChange={(value) => handleDropdownChange('comuneCitta', value)}
+                  placeholder="Seleziona comune/città"
+                  icon={<FontAwesomeIcon icon={faCity} />}
+                  disabled={!formData.isForeigner && formData.codiceFiscale}
+                  tabIndex={9}
+                />
+              </div>
+            </div>
+            
+            {/* Codice Fiscale */}
+            <div className="form-group-row">
+              <label htmlFor="codiceFiscale" className="form-label">Codice Fiscale*</label>
+              <div className="form-input">
+                <div className="input-with-icon">
+                  <input
+                    type="text"
+                    className="input-animated bg-light"
+                    id="codiceFiscale"
+                    name="codiceFiscale"
+                    value={formData.codiceFiscale}
+                    readOnly
+                    tabIndex={10}
+                  />
+                  <span className="input-icon">
+                    <FontAwesomeIcon icon={faIdCard} />
+                  </span>
+                </div>
+                <small className="text-muted">(calcolato se non indicato)</small>
+              </div>
+            </div>
+          </form>
+        </div>
+        
+        {/* Pulsanti */}
+        <div className="buttons-container">
+          <button
+            type="button"
+            className="btn-prev"
+            onClick={goToPreviousStep}
+            tabIndex={11}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
+            <span>Indietro</span>
+          </button>
+          
+          <button
+            type="button"
+            className="btn-next"
+            onClick={handleSubmit}
+            tabIndex={12}
+          >
+            <span className="me-2">Avanti</span>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
+      </div>
+    );
+  };
+  
+  // Funzione per renderizzare lo step corrente
+  const renderCurrentStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <PrivacyNoticeStep />;
+      case 2:
+        return <FiscalCodeStep />;
+      case 3:
+        return <PersonalDataStep />;
+      default:
+        return (
+          <div className="step-content">
+            <h4 className="step-title">
+              <FontAwesomeIcon icon={faUniversity} className="me-2" />
+              Step {currentStep}
+            </h4>
+            <p className="text-center text-muted">Questo step non è ancora implementato.</p>
+            <div className="buttons-container">
+              <button
+                className="btn-prev"
+                onClick={goToPreviousStep}
+                tabIndex={1}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
+                Indietro
+              </button>
+              <button
+                className="btn-next"
+                onClick={goToNextStep}
+                tabIndex={2}
+              >
+                Avanti
+                <FontAwesomeIcon icon={faArrowRight} className="ms-2" />
+              </button>
+            </div>
+          </div>
+        );
+    }
+  };
 
   return (
-    <div className="position-relative d-inline-block">
+    <div className="register-dropdown-container">
       <button
-        type="button"
+        className="register-button"
         onClick={toggleDropdown}
-        className="btn btn-primary d-flex align-items-center gap-2"
-        style={{ backgroundColor: theme.primary, borderColor: theme.primary }}
       >
-        <FontAwesomeIcon icon={faUserPlus} />
-        <span>Registrati</span>
+        Registrati
       </button>
       
       {showDropdown && (
         <div
           ref={dropdownRef}
-          className="position-absolute start-0 mt-3 bg-white rounded shadow"
-          style={{
-            zIndex: 1000,
-            width: '500px',
-            maxWidth: '100vw',
-            borderRadius: '0.5rem',
-            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.15)'
-          }}
+          className="dropdown-menu-custom"
+          onClick={handleDropdownClick}
         >
-          <div className="p-4">
-            <div className="d-flex align-items-center mb-4">
-              <FontAwesomeIcon icon={faAddressCard} className="me-2" style={{ fontSize: '1.25rem', color: theme.primary }} />
-              <h4 className="mb-0 fw-bold" style={{ color: theme.primary }}>Registrazione della persona</h4>
-            </div>
-            
-            <div className="mb-4">
-              <div className="d-flex justify-content-between align-items-center mb-2">
-                <div className="d-flex align-items-center">
-                  <div
-                    className="d-flex justify-content-center align-items-center rounded-circle me-2 text-white"
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      fontWeight: 'bold',
-                      backgroundColor: theme.primary
-                    }}
-                  >
-                    {currentStep}
-                  </div>
-                  <span className="fw-bold">Step {currentStep} di {totalSteps}</span>
-                </div>
-                <span className="badge rounded-pill" style={{ backgroundColor: theme.primary }}>
-                  {Math.round((currentStep / totalSteps) * 100)}%
-                </span>
-              </div>
-              
-              <div className="progress mb-2" style={{ height: '8px', backgroundColor: theme.grayLight }}>
-                <div
-                  className="progress-bar"
-                  role="progressbar"
-                  style={{
-                    width: `${(currentStep / totalSteps) * 100}%`,
-                    backgroundColor: theme.primary
-                  }}
-                  aria-valuenow={(currentStep / totalSteps) * 100}
-                  aria-valuemin="0"
-                  aria-valuemax="100"
-                ></div>
-              </div>
-              
-              <div className="d-flex justify-content-between">
-                {Array.from({ length: 12 }).map((_, index) => {
-                  const stepNumber = index + 1;
-                  const isActive = stepNumber <= currentStep;
-                  
-                  return (
-                    <div
-                      key={stepNumber}
-                      className={`rounded-circle ${isActive ? '' : 'bg-light border'}`}
-                      style={{
-                        width: '16px',
-                        height: '16px',
-                        backgroundColor: isActive ? theme.primary : undefined
-                      }}
-                    ></div>
-                  );
-                })}
-              </div>
-            </div>
-            
-            {currentStep === 1 && <PrivacyNoticeStep />}
-            {currentStep === 2 && <FiscalCodeStep />}
-            {currentStep === 3 && <PersonalDataStep />}
-            {/* Gli altri step verrebbero implementati qui */}
-          </div>
+          <StepIndicator />
+          <TransitionGroup>
+            <CSSTransition
+              key={currentStep}
+              timeout={300}
+              classNames="step-transition"
+            >
+              {renderCurrentStep()}
+            </CSSTransition>
+          </TransitionGroup>
+          <FiscalCodeCalculator />
         </div>
       )}
-      
-      <FiscalCodeCalculator />
     </div>
   );
 };

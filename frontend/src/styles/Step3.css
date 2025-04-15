@@ -1,0 +1,150 @@
+/* Step3.css */
+/* Stili per il componente Step3 - Dati Personali */
+
+.step3-container {
+  font-family: Arial, sans-serif;
+  color: #333;
+  max-width: 100%;
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.step3-header {
+  margin-bottom: 20px;
+}
+
+.step3-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #0056b3;
+}
+
+.step3-description {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+.step3-form-container {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+.step3-form-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  color: #0056b3;
+}
+
+.step3-form {
+  margin-bottom: 0;
+}
+
+.step3-form-group {
+  margin-bottom: 15px;
+}
+
+.step3-label {
+  text-align: right;
+  padding-right: 15px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.step3-input, .step3-select {
+  font-size: 14px;
+  height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.date-input-container {
+  position: relative;
+}
+
+.calendar-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #777;
+  font-size: 14px;
+}
+
+.date-format-hint, .fiscal-code-hint {
+  color: #777;
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+.gender-options {
+  margin-top: 8px;
+}
+
+.gender-option {
+  font-size: 14px;
+  margin-right: 20px;
+}
+
+.fiscal-code {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.step3-buttons {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.step3-button-back {
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  color: #212529;
+}
+
+.step3-button-next {
+  font-size: 14px;
+  padding: 8px 16px;
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+/* Stili adattati per corrispondere all'interfaccia dell'utente */
+.step3-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.step3-title {
+  color: #0056b3;
+}
+
+.step3-form-header {
+  color: #0056b3;
+}
+
+.step3-button-next {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.step3-button-next:hover {
+  background-color: #004494;
+  border-color: #004494;
+}

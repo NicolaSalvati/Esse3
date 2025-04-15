@@ -9,45 +9,44 @@
 
 
 
-## 🆕 Novità Versione 7.0
+## **Novità - Versione 7.3 Beta**
+La Versione 7.3 Beta introduce numerosi miglioramenti all'esperienza utente e nuove 
+funzionalità che rendono il processo di registrazione più semplice, moderno ed efficiente.
 
-### Homepage - Migliorie grafiche e funzionali
-- Implementazione di un carosello di immagini con scorrimento automatico
-- Overlay blu trasparente sulle immagini del carosello
-- Rimozione dei pulsanti di navigazione laterali
-- Pulsanti principali resi trasparenti al 70%
-- Miglioramento del titolo dell’università:
-  - Aumento dimensioni
-  - Animazioni ed effetti visivi
-  - Migliore leggibilità grazie ad ombreggiatura
+**Miglioramenti all'interfaccia utente**
+- RegisterDropdown completamente riprogettato: interfaccia moderna, elegante e animazioni fluide
+per l'apertura del menu sotto il pulsante "Registrati".
+- Risolto il problema di focus nei campi Nome e Cognome: ora l'inserimento dei dati è continuo e
+senza interruzioni.
+- Migliorata la navigazione tramite tasto TAB: passaggio sequenziale tra i campi input.
+- Design Responsive: interfaccia adattiva per tutti i dispositivi (desktop, tablet, mobile).
+- Animazioni e transizioni fluide: esperienza utente migliorata.
 
-### Nuova pagina: Informazioni sull’Università
-Creata una pagina dedicata con 3 sezioni principali:
+**Nuove funzionalità avanzate
+🧠 Autocompletamento intelligente:**
 
-#### → Storia
-- Video YouTube integrato
-- Timeline interattiva per evidenziare gli eventi più importanti
+Inserendo il Codice Fiscale allo Step 2, i campi di Data di nascita, Sesso e Comune nello Step 3 vengono precompilati automaticamente.
 
-#### → Sedi
-- Scorrimento orizzontale per visualizzare le sedi universitarie
-- Immagini dedicate per ogni sede
-- Mappa interattiva con marker per la posizione di ogni sede
+📋 **Menu a tendina aggiornati e completi:**
+Tutte le nazioni per Prima cittadinanza e Nazione.
+Tutte le province italiane per Provincia.
+Tutti i comuni italiani per Comune/Città (filtrati dinamicamente in base alla provincia 
+selezionata).
 
-#### → Corsi
-- Organizzazione dei corsi per sede universitaria
-- Scorrimento orizzontale dei corsi per una migliore esperienza utente
-- Rimozione dei link ridondanti per una navigazione più pulita
+🔒 **Validazione codice fiscale:**
+- Obbligatoria per proseguire allo Step 3, salvo dichiarazione di studente straniero.
+- ♻️ Reset automatico dei dati:
+Tornando indietro di uno step, tutti i dati successivi vengono cancellati per evitare incoerenze.
 
----
+**Migliorie tecniche**
+🧩 Ristrutturazione modulare del codice per maggiore pulizia e manutenibilità.
+💡 Refactoring completo del componente RegisterDropdown.
+🛠️ Ottimizzazione generale delle performance.
 
-## Considerazioni finali
-> Questa versione è incentrata sulla User Experience e sulla valorizzazione visiva dei contenuti, migliorando estetica, navigazione e interazione dell’utente.
+__Questa versione rappresenta un grande passo avanti rispetto alla Versione 7.2 Beta, migliorando 
+in modo significativo usabilità, velocità e design dell'interfaccia di registrazione.__
 
----
-Vuoi che ti preparo:
-- questo testo in markdown pronto da incollare nel tuo README?
-- oppure come descrizione ufficiale della Release 7.0 su GitHub?
-- oppure file `CHANGELOG.md` pulito?
+
 
 ## 📋 Panoramica
 

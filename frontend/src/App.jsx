@@ -17,7 +17,6 @@ import AdminFacoltaPage from './pages/AdminFacoltaPage';
 import ImmatricolazionePage from './pages/ImmatricolazionePage';
 import ImmatricolazioneFormPage from './pages/ImmatricolazioneFormPage';
 import AdminImmatricolazionePage from './pages/AdminImmatricolazionePage';
-import UniversityInfo from './pages/UniversityInfo';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -31,7 +30,6 @@ function App() {
               <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route path="/register" element={<RegisterPage />} />
-              <Route path="/university-info" element={<UniversityInfo />} />
               
               {/* Rotte protette */}
               <Route path="/profile" element={
