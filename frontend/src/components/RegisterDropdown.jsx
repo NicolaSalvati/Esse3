@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Button, Form, Row, Col } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft, faCalculator, faCheck, faUniversity, faCalendarAlt, faUser, faIdCard, faGlobe, faMapMarkerAlt, faCity, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faArrowLeft, faCalculator, faCheck, faUniversity, faCalendarAlt, faUser, faIdCard, faGlobe, faMapMarkerAlt, faCity, faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import '../styles/RegisterDropdown.css';
 
@@ -197,307 +197,50 @@ const NAZIONI_ESTERE = {
   "BRUNEI": "Z206", "BULGARIA": "Z104", "BURKINA FASO": "Z354", "BURUNDI": "Z305", "CAMBOGIA": "Z208",
   "CAMERUN": "Z306", "CANADA": "Z401", "CAPO VERDE": "Z307", "CIAD": "Z308", "CILE": "Z603",
   "CINA": "Z210", "CIPRO": "Z211", "CITTA DEL VATICANO": "Z106", "COLOMBIA": "Z604", "COMORE": "Z310",
-  "CONGO": "Z311", "COREA DEL NORD": "Z214", "COREA DEL SUD": "Z213", "COSTA D'AVORIO": "Z313", "COSTA RICA": "Z506",
-  "CROAZIA": "Z149", "CUBA": "Z504", "DANIMARCA": "Z107", "DOMINICA": "Z508", "ECUADOR": "Z605",
+  "CONGO": "Z311", "COREA DEL NORD": "Z214", "COREA DEL SUD": "Z213", "COSTA D'AVORIO": "Z313", "COSTA RICA": "Z515",
+  "CROAZIA": "Z149", "CUBA": "Z504", "DANIMARCA": "Z107", "DOMINICA": "Z516", "ECUADOR": "Z605",
   "EGITTO": "Z336", "EL SALVADOR": "Z519", "EMIRATI ARABI UNITI": "Z215", "ERITREA": "Z368", "ESTONIA": "Z144",
   "ETIOPIA": "Z315", "FIJI": "Z704", "FILIPPINE": "Z216", "FINLANDIA": "Z109", "FRANCIA": "Z110",
   "GABON": "Z316", "GAMBIA": "Z317", "GEORGIA": "Z147", "GERMANIA": "Z112", "GHANA": "Z318",
-  "GIAMAICA": "Z507", "GIAPPONE": "Z219", "GIBUTI": "Z361", "GIORDANIA": "Z220", "GRECIA": "Z115",
-  "GRENADA": "Z524", "GUATEMALA": "Z509", "GUINEA": "Z319", "GUINEA BISSAU": "Z320", "GUINEA EQUATORIALE": "Z321",
-  "GUYANA": "Z606", "HAITI": "Z510", "HONDURAS": "Z511", "INDIA": "Z222", "INDONESIA": "Z223",
+  "GIAMAICA": "Z507", "GIAPPONE": "Z219", "GIBUTI": "Z322", "GIORDANIA": "Z220", "GRECIA": "Z115",
+  "GRENADA": "Z524", "GUATEMALA": "Z523", "GUINEA": "Z319", "GUINEA BISSAU": "Z320", "GUINEA EQUATORIALE": "Z321",
+  "GUYANA": "Z606", "HAITI": "Z525", "HONDURAS": "Z526", "INDIA": "Z222", "INDONESIA": "Z223",
   "IRAN": "Z224", "IRAQ": "Z225", "IRLANDA": "Z116", "ISLANDA": "Z117", "ISRAELE": "Z226",
-  "ITALIA": "Z127", "KAZAKISTAN": "Z142", "KENYA": "Z322", "KIRGHIZISTAN": "Z143", "KIRIBATI": "Z731",
-  "KUWAIT": "Z227", "LAOS": "Z228", "LESOTHO": "Z323", "LETTONIA": "Z145", "LIBANO": "Z229",
-  "LIBERIA": "Z324", "LIBIA": "Z326", "LIECHTENSTEIN": "Z119", "LITUANIA": "Z146", "LUSSEMBURGO": "Z120",
-  "MACEDONIA": "Z148", "MADAGASCAR": "Z327", "MALAWI": "Z328", "MALAYSIA": "Z230", "MALDIVE": "Z232",
-  "MALI": "Z329", "MALTA": "Z121", "MAROCCO": "Z330", "MAURITANIA": "Z331", "MAURITIUS": "Z332",
-  "MESSICO": "Z514", "MICRONESIA": "Z732", "MOLDAVIA": "Z140", "MONACO": "Z122", "MONGOLIA": "Z233",
-  "MONTENEGRO": "Z156", "MOZAMBICO": "Z333", "MYANMAR": "Z234", "NAMIBIA": "Z334", "NAURU": "Z715",
-  "NEPAL": "Z235", "NICARAGUA": "Z515", "NIGER": "Z335", "NIGERIA": "Z336", "NORVEGIA": "Z123",
-  "NUOVA ZELANDA": "Z719", "OMAN": "Z237", "PAESI BASSI": "Z126", "PAKISTAN": "Z236", "PALAU": "Z734",
-  "PANAMA": "Z516", "PAPUA NUOVA GUINEA": "Z730", "PARAGUAY": "Z608", "PERU": "Z609", "POLONIA": "Z127",
-  "PORTOGALLO": "Z128", "QATAR": "Z238", "REGNO UNITO": "Z114", "REPUBBLICA CECA": "Z156", "REPUBBLICA CENTRAFRICANA": "Z309",
-  "REPUBBLICA DEMOCRATICA DEL CONGO": "Z312", "REPUBBLICA DOMINICANA": "Z505", "ROMANIA": "Z129", "RUANDA": "Z338",
-  "RUSSIA": "Z154", "SAINT KITTS E NEVIS": "Z525", "SAINT LUCIA": "Z527", "SAINT VINCENT E GRENADINE": "Z526",
-  "SAMOA": "Z724", "SAN MARINO": "Z130", "SAO TOME E PRINCIPE": "Z341", "SENEGAL": "Z343", "SERBIA": "Z158",
+  "ITALIA": "Z127", "KAZAKISTAN": "Z142", "KENYA": "Z324", "KIRGHIZISTAN": "Z143", "KIRIBATI": "Z731",
+  "KUWAIT": "Z227", "LAOS": "Z228", "LESOTHO": "Z325", "LETTONIA": "Z145", "LIBANO": "Z229",
+  "LIBERIA": "Z326", "LIBIA": "Z327", "LIECHTENSTEIN": "Z119", "LITUANIA": "Z146", "LUSSEMBURGO": "Z120",
+  "MACEDONIA": "Z148", "MADAGASCAR": "Z328", "MALAWI": "Z329", "MALAYSIA": "Z231", "MALDIVE": "Z232",
+  "MALI": "Z330", "MALTA": "Z121", "MAROCCO": "Z330", "MAURITANIA": "Z332", "MAURITIUS": "Z333",
+  "MESSICO": "Z529", "MICRONESIA": "Z734", "MOLDAVIA": "Z140", "MONACO": "Z122", "MONGOLIA": "Z233",
+  "MONTENEGRO": "Z156", "MOZAMBICO": "Z334", "MYANMAR": "Z234", "NAMIBIA": "Z335", "NAURU": "Z739",
+  "NEPAL": "Z235", "NICARAGUA": "Z530", "NIGER": "Z337", "NIGERIA": "Z338", "NORVEGIA": "Z123",
+  "NUOVA ZELANDA": "Z719", "OMAN": "Z236", "PAESI BASSI": "Z126", "PAKISTAN": "Z236", "PALAU": "Z741",
+  "PANAMA": "Z531", "PAPUA NUOVA GUINEA": "Z742", "PARAGUAY": "Z608", "PERU": "Z609", "POLONIA": "Z127",
+  "PORTOGALLO": "Z128", "QATAR": "Z237", "REGNO UNITO": "Z114", "REPUBBLICA CECA": "Z156", "REPUBBLICA CENTRAFRICANA": "Z309",
+  "REPUBBLICA DEMOCRATICA DEL CONGO": "Z312", "REPUBBLICA DOMINICANA": "Z505", "ROMANIA": "Z129", "RUANDA": "Z340",
+  "RUSSIA": "Z154", "SAINT KITTS E NEVIS": "Z533", "SAINT LUCIA": "Z534", "SAINT VINCENT E GRENADINE": "Z535",
+  "SAMOA": "Z744", "SAN MARINO": "Z130", "SAO TOME E PRINCIPE": "Z341", "SENEGAL": "Z343", "SERBIA": "Z158",
   "SEYCHELLES": "Z342", "SIERRA LEONE": "Z344", "SINGAPORE": "Z248", "SIRIA": "Z240", "SLOVACCHIA": "Z155",
   "SLOVENIA": "Z150", "SOMALIA": "Z345", "SPAGNA": "Z131", "SRI LANKA": "Z209", "STATI UNITI": "Z404",
   "SUDAFRICA": "Z347", "SUDAN": "Z348", "SUDAN DEL SUD": "Z907", "SURINAME": "Z610", "SVEZIA": "Z132",
   "SVIZZERA": "Z133", "SWAZILAND": "Z349", "TAGIKISTAN": "Z152", "TAIWAN": "Z217", "TANZANIA": "Z357",
-  "THAILANDIA": "Z241", "TIMOR ORIENTALE": "Z242", "TOGO": "Z351", "TONGA": "Z726", "TRINIDAD E TOBAGO": "Z612",
-  "TUNISIA": "Z352", "TURCHIA": "Z243", "TURKMENISTAN": "Z151", "TUVALU": "Z727", "UCRAINA": "Z138",
-  "UGANDA": "Z353", "UNGHERIA": "Z134", "URUGUAY": "Z611", "UZBEKISTAN": "Z135", "VANUATU": "Z728",
+  "THAILANDIA": "Z241", "TIMOR ORIENTALE": "Z242", "TOGO": "Z351", "TONGA": "Z748", "TRINIDAD E TOBAGO": "Z612",
+  "TUNISIA": "Z352", "TURCHIA": "Z243", "TURKMENISTAN": "Z151", "TUVALU": "Z749", "UCRAINA": "Z138",
+  "UGANDA": "Z353", "UNGHERIA": "Z134", "URUGUAY": "Z611", "UZBEKISTAN": "Z135", "VANUATU": "Z750",
   "VENEZUELA": "Z614", "VIETNAM": "Z251", "YEMEN": "Z246", "ZAMBIA": "Z355", "ZIMBABWE": "Z337"
 };
 
-// Funzione per calcolare il codice fiscale
-const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace) => {
-  // Funzione per normalizzare una stringa (rimuovere spazi, accenti, ecc.)
-  const normalizeString = (str) => {
-    return str.toUpperCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^A-Z]/g, "");
-  };
-
-  // Funzione per ottenere il codice del cognome
-  const getLastNameCode = (lastName) => {
-    const normalized = normalizeString(lastName);
-    
-    // Estrai le consonanti e le vocali
-    const consonants = normalized.replace(/[AEIOU]/g, "");
-    const vowels = normalized.replace(/[^AEIOU]/g, "");
-    
-    // Combina consonanti e vocali, prendi i primi 3 caratteri
-    let code = consonants + vowels;
-    code = code.substring(0, 3);
-    
-    // Se il cognome è troppo corto, aggiungi X
-    while (code.length < 3) {
-      code += "X";
-    }
-    
-    return code;
-  };
-  
-  // Funzione per ottenere il codice del nome
-  const getFirstNameCode = (firstName) => {
-    const normalized = normalizeString(firstName);
-    
-    // Estrai le consonanti e le vocali
-    const consonants = normalized.replace(/[AEIOU]/g, "");
-    const vowels = normalized.replace(/[^AEIOU]/g, "");
-    
-    // Se ci sono almeno 4 consonanti, prendi la 1ª, 3ª e 4ª
-    if (consonants.length >= 4) {
-      return consonants[0] + consonants[2] + consonants[3];
-    }
-    
-    // Se ci sono 3 consonanti, prendile tutte
-    if (consonants.length === 3) {
-      return consonants;
-    }
-    
-    // Altrimenti, combina consonanti e vocali
-    let code = consonants + vowels;
-    code = code.substring(0, 3);
-    
-    // Se il nome è troppo corto, aggiungi X
-    while (code.length < 3) {
-      code += "X";
-    }
-    
-    return code;
-  };
-  
-  // Funzione per ottenere il codice dell'anno
-  const getYearCode = (birthDate) => {
-    const date = new Date(birthDate);
-    const year = date.getFullYear().toString();
-    return year.substring(2);
-  };
-  
-  // Funzione per ottenere il codice del mese
-  const getMonthCode = (birthDate) => {
-    const date = new Date(birthDate);
-    const month = date.getMonth();
-    const monthCodes = "ABCDEHLMPRST";
-    return monthCodes[month];
-  };
-  
-  // Funzione per ottenere il codice del giorno
-  const getDayCode = (birthDate, gender) => {
-    const date = new Date(birthDate);
-    let day = date.getDate();
-    
-    // Per le donne, aggiungi 40 al giorno
-    if (gender.toUpperCase() === "F") {
-      day += 40;
-    }
-    
-    // Formatta il giorno come stringa di 2 cifre
-    return day.toString().padStart(2, "0");
-  };
-  
-  // Funzione per ottenere il codice del comune/stato estero
-  const getPlaceCode = (birthPlace) => {
-    // Normalizza il nome del luogo
-    const normalizedPlace = birthPlace.toUpperCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-    
-    // Cerca prima nei comuni italiani
-    if (COMUNI_ITALIANI[normalizedPlace]) {
-      return COMUNI_ITALIANI[normalizedPlace];
-    }
-    
-    // Poi cerca nelle nazioni estere
-    if (NAZIONI_ESTERE[normalizedPlace]) {
-      return NAZIONI_ESTERE[normalizedPlace];
-    }
-    
-    // Se non trovato, restituisci un placeholder
-    console.warn(`Codice catastale non trovato per: ${birthPlace}`);
-    return "XXXX";
-  };
-  
-  // Funzione per calcolare il carattere di controllo
-  const getControlChar = (partialCode) => {
-    // Tabella di conversione per i caratteri in posizione dispari (1-based index)
-    const oddValues = {
-      '0': 1, '1': 0, '2': 5, '3': 7, '4': 9, '5': 13, '6': 15, '7': 17, '8': 19, '9': 21,
-      'A': 1, 'B': 0, 'C': 5, 'D': 7, 'E': 9, 'F': 13, 'G': 15, 'H': 17, 'I': 19, 'J': 21,
-      'K': 2, 'L': 4, 'M': 18, 'N': 20, 'O': 11, 'P': 3, 'Q': 6, 'R': 8, 'S': 12, 'T': 14,
-      'U': 16, 'V': 10, 'W': 22, 'X': 25, 'Y': 24, 'Z': 23
-    };
-    
-    // Tabella di conversione per i caratteri in posizione pari (1-based index)
-    const evenValues = {
-      '0': 0, '1': 1, '2': 2, '3': 3, '4': 4, '5': 5, '6': 6, '7': 7, '8': 8, '9': 9,
-      'A': 0, 'B': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'J': 9,
-      'K': 10, 'L': 11, 'M': 12, 'N': 13, 'O': 14, 'P': 15, 'Q': 16, 'R': 17, 'S': 18, 'T': 19,
-      'U': 20, 'V': 21, 'W': 22, 'X': 23, 'Y': 24, 'Z': 25
-    };
-    
-    // Calcola la somma dei valori
-    let sum = 0;
-    for (let i = 0; i < partialCode.length; i++) {
-      const char = partialCode[i];
-      
-      // In JavaScript, gli indici sono 0-based, ma l'algoritmo del codice fiscale usa indici 1-based
-      if (i % 2 === 0) { // Posizione dispari (1, 3, 5...) nell'indice 1-based
-        sum += oddValues[char];
-      } else { // Posizione pari (2, 4, 6...) nell'indice 1-based
-        sum += evenValues[char];
-      }
-    }
-    
-    // Calcola il resto della divisione per 26
-    const remainder = sum % 26;
-    
-    // Converti il resto in una lettera (A=0, B=1, ..., Z=25)
-    return String.fromCharCode(65 + remainder);
-  };
-  
-  try {
-    // Calcola le parti del codice fiscale
-    const lastNameCode = getLastNameCode(lastName);
-    const firstNameCode = getFirstNameCode(firstName);
-    const yearCode = getYearCode(birthDate);
-    const monthCode = getMonthCode(birthDate);
-    const dayCode = getDayCode(birthDate, gender);
-    const placeCode = getPlaceCode(birthPlace);
-    
-    // Combina le parti per ottenere il codice parziale
-    const partialCode = lastNameCode + firstNameCode + yearCode + monthCode + dayCode + placeCode;
-    
-    // Calcola il carattere di controllo
-    const controlChar = getControlChar(partialCode);
-    
-    // Restituisci il codice fiscale completo
-    return partialCode + controlChar;
-  } catch (error) {
-    console.error("Errore nel calcolo del codice fiscale:", error);
-    return "Errore nel calcolo";
-  }
-};
-
-// Funzione per estrarre informazioni dal codice fiscale
-const extractInfoFromFiscalCode = (fiscalCode) => {
-  if (!fiscalCode || fiscalCode.length !== 16) {
-    return null;
-  }
-
-  try {
-    // Estrai le parti del codice fiscale
-    const yearCode = fiscalCode.substring(6, 8);
-    const monthCode = fiscalCode.substring(8, 9);
-    const dayCode = parseInt(fiscalCode.substring(9, 11));
-    const placeCode = fiscalCode.substring(11, 15);
-
-    // Determina il sesso
-    const isFemale = dayCode > 40;
-    const actualDay = isFemale ? dayCode - 40 : dayCode;
-    const gender = isFemale ? "Femmina" : "Maschio";
-
-    // Determina l'anno di nascita (assumendo che sia nel 1900 o 2000)
-    const currentYear = new Date().getFullYear();
-    const century = parseInt(yearCode) + 2000 > currentYear ? 1900 : 2000;
-    const year = century + parseInt(yearCode);
-
-    // Determina il mese di nascita
-    const monthCodes = "ABCDEHLMPRST";
-    const month = monthCodes.indexOf(monthCode);
-
-    // Crea la data di nascita in formato italiano
-    const birthDate = new Date(year, month, actualDay);
-    const formattedBirthDate = `${actualDay.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
-
-    // Trova il luogo di nascita dal codice
-    let birthPlace = null;
-    let provincia = null;
-    let nazione = "ITALIA";
-
-    // Cerca nei comuni italiani
-    for (const [comune, code] of Object.entries(COMUNI_ITALIANI)) {
-      if (code === placeCode) {
-        birthPlace = comune;
-        // Trova la provincia del comune
-        for (const [prov, comuni] of Object.entries(CITTA_ITALIANE)) {
-          if (comuni.includes(comune)) {
-            provincia = prov;
-            break;
-          }
-        }
-        break;
-      }
-    }
-
-    // Se non trovato nei comuni italiani, cerca nelle nazioni estere
-    if (!birthPlace) {
-      for (const [country, code] of Object.entries(NAZIONI_ESTERE)) {
-        if (code === placeCode) {
-          birthPlace = country;
-          nazione = country;
-          provincia = null;
-          break;
-        }
-      }
-    }
-
-    return {
-      gender,
-      birthDate: formattedBirthDate,
-      birthPlace,
-      provincia,
-      nazione,
-      codiceFiscale: fiscalCode
-    };
-  } catch (error) {
-    console.error("Errore nell'estrazione delle informazioni dal codice fiscale:", error);
-    return null;
-  }
-};
-
-// Componente per il dropdown con ricerca
+// Componente per il dropdown di ricerca
 const SearchableDropdown = ({ options, value, onChange, placeholder, icon, tabIndex }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredOptions, setFilteredOptions] = useState(options);
+  const [searchTerm, setSearchTerm] = useState('');
   const dropdownRef = useRef(null);
   const searchInputRef = useRef(null);
   
   // Filtra le opzioni in base al termine di ricerca
-  useEffect(() => {
-    if (searchTerm === "") {
-      setFilteredOptions(options);
-    } else {
-      const filtered = options.filter(option =>
-        option.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredOptions(filtered);
-    }
-  }, [searchTerm, options]);
+  const filteredOptions = options.filter(option =>
+    option.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   
   // Chiudi il dropdown quando si clicca fuori
   useEffect(() => {
@@ -633,7 +376,7 @@ const RegisterDropdown = () => {
   // Stato per le città disponibili in base alla provincia selezionata
   const [cittaDisponibili, setCittaDisponibili] = useState([]);
   
-  // Stato per il modal del calcolatore
+  // Stato per il calcolatore del codice fiscale
   const [showCalculator, setShowCalculator] = useState(false);
   
   // Riferimento al dropdown
@@ -719,16 +462,151 @@ const RegisterDropdown = () => {
     setErrors({});
   };
   
-  // Funzione per aprire il calcolatore
-  const openCalculator = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setShowCalculator(true);
+  // Funzione per aprire/chiudere il calcolatore
+  const toggleCalculator = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setShowCalculator(!showCalculator);
   };
   
-  // Funzione per chiudere il calcolatore
-  const closeCalculator = () => {
-    setShowCalculator(false);
+  // Funzione per calcolare il codice fiscale
+  const calculateFiscalCode = (firstName, lastName, birthDate, gender, birthPlace) => {
+    // Implementazione semplificata del calcolo del codice fiscale
+    // In una implementazione reale, questa funzione sarebbe più complessa
+    
+    // Estrai le consonanti dal cognome
+    const consonantsLastName = lastName.toUpperCase().replace(/[^BCDFGHJKLMNPQRSTVWXYZ]/g, '');
+    // Estrai le vocali dal cognome
+    const vowelsLastName = lastName.toUpperCase().replace(/[^AEIOU]/g, '');
+    // Combina consonanti e vocali, e prendi i primi 3 caratteri
+    let lastNameCode = (consonantsLastName + vowelsLastName + 'XXX').substring(0, 3);
+    
+    // Estrai le consonanti dal nome
+    const consonantsFirstName = firstName.toUpperCase().replace(/[^BCDFGHJKLMNPQRSTVWXYZ]/g, '');
+    // Estrai le vocali dal nome
+    const vowelsFirstName = firstName.toUpperCase().replace(/[^AEIOU]/g, '');
+    // Combina consonanti e vocali, e prendi i primi 3 caratteri
+    let firstNameCode = (consonantsFirstName + vowelsFirstName + 'XXX').substring(0, 3);
+    
+    // Estrai l'anno dalla data di nascita (formato yyyy-MM-dd)
+    const year = birthDate.substring(2, 4);
+    
+    // Mappa dei mesi per il codice fiscale
+    const monthMap = {
+      '01': 'A', '02': 'B', '03': 'C', '04': 'D', '05': 'E', '06': 'H',
+      '07': 'L', '08': 'M', '09': 'P', '10': 'R', '11': 'S', '12': 'T'
+    };
+    
+    // Estrai il mese dalla data di nascita
+    const month = monthMap[birthDate.substring(5, 7)];
+    
+    // Estrai il giorno dalla data di nascita e aggiungi 40 se femmina
+    let day = parseInt(birthDate.substring(8, 10));
+    if (gender === 'F') {
+      day += 40;
+    }
+    day = day.toString().padStart(2, '0');
+    
+    // Codice catastale del comune o della nazione estera
+    let placeCode = '';
+    if (COMUNI_ITALIANI[birthPlace]) {
+      placeCode = COMUNI_ITALIANI[birthPlace];
+    } else if (NAZIONI_ESTERE[birthPlace]) {
+      placeCode = NAZIONI_ESTERE[birthPlace];
+    } else {
+      // Se non troviamo il codice, usiamo un valore di default
+      placeCode = 'Z999';
+    }
+    
+    // Calcolo del carattere di controllo (semplificato)
+    const controlChar = 'X';
+    
+    // Combina tutte le parti per formare il codice fiscale
+    return (lastNameCode + firstNameCode + year + month + day + placeCode + controlChar).toUpperCase();
+  };
+  
+  // Funzione per estrarre informazioni dal codice fiscale
+  const extractInfoFromFiscalCode = (fiscalCode) => {
+    // Implementazione semplificata dell'estrazione delle informazioni dal codice fiscale
+    // In una implementazione reale, questa funzione sarebbe più complessa
+    
+    // Estrai l'anno dalla posizione 6-7
+    const year = fiscalCode.substring(6, 8);
+    // Estrai il mese dalla posizione 8
+    const monthChar = fiscalCode.substring(8, 9);
+    
+    // Mappa dei mesi per il codice fiscale
+    const monthMap = {
+      'A': '01', 'B': '02', 'C': '03', 'D': '04', 'E': '05', 'H': '06',
+      'L': '07', 'M': '08', 'P': '09', 'R': '10', 'S': '11', 'T': '12'
+    };
+    
+    const month = monthMap[monthChar] || '01';
+    
+    // Estrai il giorno dalla posizione 9-10
+    let day = parseInt(fiscalCode.substring(9, 11));
+    
+    // Determina il sesso
+    const gender = day > 40 ? 'Femmina' : 'Maschio';
+    
+    // Correggi il giorno se è una femmina
+    if (day > 40) {
+      day -= 40;
+    }
+    
+    day = day.toString().padStart(2, '0');
+    
+    // Determina il secolo (semplificato)
+    const currentYear = new Date().getFullYear().toString().substring(2, 4);
+    const century = parseInt(year) > parseInt(currentYear) ? '19' : '20';
+    
+    // Formatta la data di nascita
+    const birthDate = `${day}/${month}/${century}${year}`;
+    
+    // Estrai il codice catastale dalla posizione 11-15
+    const placeCode = fiscalCode.substring(11, 15);
+    
+    // Trova il comune o la nazione corrispondente al codice catastale
+    let birthPlace = '';
+    let provincia = '';
+    let nazione = 'ITALIA';
+    
+    // Cerca nei comuni italiani
+    for (const [comune, codice] of Object.entries(COMUNI_ITALIANI)) {
+      if (codice === placeCode) {
+        birthPlace = comune;
+        // Trova la provincia del comune
+        for (const [prov, comuni] of Object.entries(CITTA_ITALIANE)) {
+          if (comuni.includes(comune)) {
+            provincia = prov;
+            break;
+          }
+        }
+        break;
+      }
+    }
+    
+    // Se non è un comune italiano, cerca nelle nazioni estere
+    if (!birthPlace) {
+      for (const [naz, codice] of Object.entries(NAZIONI_ESTERE)) {
+        if (codice === placeCode) {
+          birthPlace = naz;
+          nazione = naz;
+          break;
+        }
+      }
+    }
+    
+    return {
+      birthDate,
+      gender,
+      birthPlace,
+      provincia,
+      nazione,
+      codiceFiscale: fiscalCode
+    };
   };
   
   // Componente per il calcolatore del codice fiscale
@@ -803,19 +681,24 @@ const RegisterDropdown = () => {
         );
         
         updateFormData({ fiscalCode });
-        closeCalculator();
+        toggleCalculator();
       }
     };
 
     return (
-      <Modal show={showCalculator} onHide={closeCalculator} centered className="calculator-modal">
-        <Modal.Header>
-          <Modal.Title>
+      <div className="calculator-dropdown">
+        <div className="calculator-header">
+          <h5>
             <FontAwesomeIcon icon={faCalculator} className="me-2" />
             Calcolo Codice Fiscale
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
+          </h5>
+          <button
+            className="btn-close"
+            onClick={toggleCalculator}
+            aria-label="Chiudi"
+          ></button>
+        </div>
+        <div className="calculator-body">
           <Form>
             <Row>
               <Col md={6}>
@@ -928,11 +811,11 @@ const RegisterDropdown = () => {
               </Form.Text>
             </Form.Group>
           </Form>
-        </Modal.Body>
-        <Modal.Footer>
+        </div>
+        <div className="calculator-footer">
           <Button
             variant="secondary"
-            onClick={closeCalculator}
+            onClick={toggleCalculator}
             tabIndex={8}
           >
             Annulla
@@ -945,8 +828,8 @@ const RegisterDropdown = () => {
             <FontAwesomeIcon icon={faCalculator} className="me-2" />
             Calcola Codice Fiscale
           </Button>
-        </Modal.Footer>
-      </Modal>
+        </div>
+      </div>
     );
   };
   
@@ -1221,7 +1104,7 @@ const RegisterDropdown = () => {
             <button
               type="button"
               className="btn-prev"
-              onClick={openCalculator}
+              onClick={toggleCalculator}
               id="calcBtn"
               tabIndex={3}
               onKeyDown={handleKeyDown}
@@ -1231,6 +1114,9 @@ const RegisterDropdown = () => {
             </button>
           </div>
         )}
+        
+        {/* Calcolatore del codice fiscale come dropdown */}
+        {showCalculator && <FiscalCodeCalculator />}
         
         <div className="buttons-container">
           <button
@@ -1464,7 +1350,9 @@ const RegisterDropdown = () => {
                       disabled={!formData.isForeigner && formData.codiceFiscale}
                       tabIndex={4}
                     />
-                    <label className="form-check-label" htmlFor="sesso-maschio">Maschio</label>
+                    <label className="form-check-label" htmlFor="sesso-maschio">
+                      Maschio
+                    </label>
                   </div>
                   <div className="form-check">
                     <input
@@ -1478,7 +1366,9 @@ const RegisterDropdown = () => {
                       disabled={!formData.isForeigner && formData.codiceFiscale}
                       tabIndex={5}
                     />
-                    <label className="form-check-label" htmlFor="sesso-femmina">Femmina</label>
+                    <label className="form-check-label" htmlFor="sesso-femmina">
+                      Femmina
+                    </label>
                   </div>
                 </div>
               </div>
@@ -1486,7 +1376,7 @@ const RegisterDropdown = () => {
             
             {/* Prima cittadinanza */}
             <div className="form-group-row">
-              <label htmlFor="primaCittadinanza" className="form-label">Prima cittadinanza*</label>
+              <label className="form-label">Prima cittadinanza*</label>
               <div className="form-input">
                 <SearchableDropdown
                   options={NAZIONI}
@@ -1501,7 +1391,7 @@ const RegisterDropdown = () => {
             
             {/* Nazione */}
             <div className="form-group-row">
-              <label htmlFor="nazione" className="form-label">Nazione*</label>
+              <label className="form-label">Nazione*</label>
               <div className="form-input">
                 <SearchableDropdown
                   options={NAZIONI}
@@ -1509,7 +1399,6 @@ const RegisterDropdown = () => {
                   onChange={(value) => handleDropdownChange('nazione', value)}
                   placeholder="Seleziona nazione"
                   icon={<FontAwesomeIcon icon={faGlobe} />}
-                  disabled={!formData.isForeigner && formData.codiceFiscale}
                   tabIndex={7}
                 />
               </div>
@@ -1517,7 +1406,7 @@ const RegisterDropdown = () => {
             
             {/* Provincia */}
             <div className="form-group-row">
-              <label htmlFor="provincia" className="form-label">Provincia*</label>
+              <label className="form-label">Provincia*</label>
               <div className="form-input">
                 <SearchableDropdown
                   options={PROVINCE_ITALIANE}
@@ -1525,7 +1414,6 @@ const RegisterDropdown = () => {
                   onChange={(value) => handleDropdownChange('provincia', value)}
                   placeholder="Seleziona provincia"
                   icon={<FontAwesomeIcon icon={faMapMarkerAlt} />}
-                  disabled={!formData.isForeigner && formData.codiceFiscale}
                   tabIndex={8}
                 />
               </div>
@@ -1533,7 +1421,7 @@ const RegisterDropdown = () => {
             
             {/* Comune/Città */}
             <div className="form-group-row">
-              <label htmlFor="comuneCitta" className="form-label">Comune/Città*</label>
+              <label className="form-label">Comune/Città*</label>
               <div className="form-input">
                 <SearchableDropdown
                   options={cittaDisponibili}
@@ -1541,7 +1429,6 @@ const RegisterDropdown = () => {
                   onChange={(value) => handleDropdownChange('comuneCitta', value)}
                   placeholder="Seleziona comune/città"
                   icon={<FontAwesomeIcon icon={faCity} />}
-                  disabled={!formData.isForeigner && formData.codiceFiscale}
                   tabIndex={9}
                 />
               </div>
@@ -1551,27 +1438,20 @@ const RegisterDropdown = () => {
             <div className="form-group-row">
               <label htmlFor="codiceFiscale" className="form-label">Codice Fiscale*</label>
               <div className="form-input">
-                <div className="input-with-icon">
-                  <input
-                    type="text"
-                    className="input-animated bg-light"
-                    id="codiceFiscale"
-                    name="codiceFiscale"
-                    value={formData.codiceFiscale}
-                    readOnly
-                    tabIndex={10}
-                  />
-                  <span className="input-icon">
-                    <FontAwesomeIcon icon={faIdCard} />
-                  </span>
-                </div>
-                <small className="text-muted">(calcolato se non indicato)</small>
+                <input
+                  type="text"
+                  className="input-animated"
+                  id="codiceFiscale"
+                  name="codiceFiscale"
+                  value={formData.codiceFiscale || formData.fiscalCode}
+                  readOnly
+                  tabIndex={10}
+                />
               </div>
             </div>
           </form>
         </div>
         
-        {/* Pulsanti */}
         <div className="buttons-container">
           <button
             type="button"
@@ -1597,8 +1477,46 @@ const RegisterDropdown = () => {
     );
   };
   
-  // Funzione per renderizzare lo step corrente
-  const renderCurrentStep = () => {
+  // Componente per gli step successivi (placeholder)
+  const NextStepsPlaceholder = () => {
+    return (
+      <div className="step-content">
+        <h4 className="step-title">
+          <FontAwesomeIcon icon={faUniversity} className="me-2" />
+          Step {currentStep}
+        </h4>
+        <div className="text-center py-5">
+          <p className="mb-4">Questo step non è ancora implementato.</p>
+          <p className="text-muted">
+            Qui verranno implementati i prossimi step del processo di registrazione.
+          </p>
+        </div>
+        
+        <div className="buttons-container">
+          <button
+            type="button"
+            className="btn-prev"
+            onClick={goToPreviousStep}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
+            <span>Indietro</span>
+          </button>
+          
+          <button
+            type="button"
+            className="btn-next"
+            onClick={goToNextStep}
+          >
+            <span className="me-2">Avanti</span>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </button>
+        </div>
+      </div>
+    );
+  };
+  
+  // Renderizza lo step corrente
+  const renderStep = () => {
     switch (currentStep) {
       case 1:
         return <PrivacyNoticeStep />;
@@ -1607,62 +1525,30 @@ const RegisterDropdown = () => {
       case 3:
         return <PersonalDataStep />;
       default:
-        return (
-          <div className="step-content">
-            <h4 className="step-title">
-              <FontAwesomeIcon icon={faUniversity} className="me-2" />
-              Step {currentStep}
-            </h4>
-            <p className="text-center text-muted">Questo step non è ancora implementato.</p>
-            <div className="buttons-container">
-              <button
-                className="btn-prev"
-                onClick={goToPreviousStep}
-                tabIndex={1}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
-                Indietro
-              </button>
-              <button
-                className="btn-next"
-                onClick={goToNextStep}
-                tabIndex={2}
-              >
-                Avanti
-                <FontAwesomeIcon icon={faArrowRight} className="ms-2" />
-              </button>
-            </div>
-          </div>
-        );
+        return <NextStepsPlaceholder />;
     }
   };
-
+  
   return (
-    <div className="register-dropdown-container">
-      <button
-        className="register-button"
-        onClick={toggleDropdown}
-      >
+    <div className="register-dropdown-container" ref={dropdownRef}>
+      <button className="register-button" onClick={toggleDropdown}>
+        <FontAwesomeIcon icon={faUser} className="me-2" />
         Registrati
       </button>
       
       {showDropdown && (
-        <div
-          ref={dropdownRef}
-          className="dropdown-menu-custom"
-          onClick={handleDropdownClick}
-        >
+        <div className="dropdown-menu-custom" onClick={handleDropdownClick}>
           <StepIndicator />
+          
           <TransitionGroup>
             <CSSTransition
               key={currentStep}
               timeout={300}
               classNames="step-transition"
             >
-              {renderCurrentStep()}
+              {renderStep()}
             </CSSTransition>
           </TransitionGroup>
-          <FiscalCodeCalculator />
         </div>
       )}
     </div>
