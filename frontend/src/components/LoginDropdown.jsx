@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faLock, faSignInAlt, faKey } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../utils/AuthContext';
 
@@ -85,6 +85,9 @@ const LoginDropdown = () => {
   // Gestione del click sul link "Accedi"
   const handleLoginClick = (e) => {
     e.preventDefault();
+    // Prima di cambiare lo stato del dropdown corrente, invia un evento per chiudere tutti gli altri
+    const closeEvent = new CustomEvent('CLOSE_ALL_DROPDOWNS', { detail: { except: 'login' } });
+    window.dispatchEvent(closeEvent);
     setShowDropdown(!showDropdown);
   };
 
@@ -96,6 +99,15 @@ const LoginDropdown = () => {
     // Invia evento per aprire il dropdown di registrazione
     const event = new CustomEvent(TOGGLE_REGISTER_EVENT);
     window.dispatchEvent(event);
+  };
+
+  // Gestione del click sul link "Password dimenticata?"
+  const handleForgotPasswordClick = (e) => {
+    e.preventDefault();
+    // Chiudi il dropdown di login
+    setShowDropdown(false);
+    // Reindirizza alla pagina di recupero password
+    navigate('/reset-password');
   };
 
   // Gestione del click fuori dal dropdown per chiuderlo
@@ -117,6 +129,21 @@ const LoginDropdown = () => {
     return () => {
       window.removeEventListener(TOGGLE_LOGIN_EVENT, handleToggleLogin);
       document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Ascolta l'evento per chiudere tutti i dropdown tranne quello specificato
+  useEffect(() => {
+    const handleCloseAllDropdowns = (e) => {
+      if (e.detail.except !== 'login') {
+        setShowDropdown(false);
+      }
+    };
+    
+    window.addEventListener('CLOSE_ALL_DROPDOWNS', handleCloseAllDropdowns);
+    
+    return () => {
+      window.removeEventListener('CLOSE_ALL_DROPDOWNS', handleCloseAllDropdowns);
     };
   }, []);
 
@@ -211,6 +238,15 @@ const LoginDropdown = () => {
                   <small>Accedi</small>
                 )}
               </Button>
+            </div>
+            
+            <div className="text-center mt-2">
+              <small>
+                <a href="#" className="text-secondary" onClick={handleForgotPasswordClick}>
+                  <FontAwesomeIcon icon={faKey} className="me-1" />
+                  Password dimenticata?
+                </a>
+              </small>
             </div>
           </Form>
           

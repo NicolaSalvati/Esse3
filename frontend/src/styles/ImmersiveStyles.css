@@ -1,0 +1,433 @@
+/* Stili per il carosello a schermo intero */
+.fullscreen-carousel {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  z-index: 1;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.blue-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0, 51, 102, 0.7), rgba(0, 51, 102, 0.5));
+  z-index: 3;
+}
+
+.carousel-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 1200px;
+  color: white;
+  z-index: 4;
+  text-align: left;
+  animation: fadeIn 1s ease-in-out;
+}
+
+/* Stile migliorato per il titolo dell'università */
+.university-label {
+  font-size: 1.4rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-weight: 600;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, rgba(0, 51, 102, 0), rgba(0, 160, 227, 0.3), rgba(0, 51, 102, 0));
+  border-radius: 4px;
+  animation: titleGlow 3s ease-in-out infinite, fadeInDown 1.5s ease-in-out;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+  border-right: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+.university-label::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes titleGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+  50% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(0, 160, 227, 0.6); }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.welcome-message-container {
+  margin-bottom: 3rem;
+  animation: fadeInUp 1.2s ease-in-out;
+}
+
+.welcome-message {
+  font-size: 3.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-line-1, .welcome-line-2, .welcome-line-3 {
+  display: block;
+  animation: fadeInLeft 1.5s ease-in-out;
+}
+
+.welcome-line-1 {
+  animation-delay: 0.3s;
+}
+
+.welcome-line-2 {
+  animation-delay: 0.6s;
+}
+
+.welcome-line-3 {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-top: 0.5rem;
+  animation-delay: 0.9s;
+}
+
+.highlight {
+  color: #ffcc00;
+  position: relative;
+  display: inline-block;
+}
+
+.highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 3px;
+  background-color: #ffcc00;
+  animation: lineGrow 1.5s ease-in-out forwards;
+  animation-delay: 1.5s;
+}
+
+@keyframes lineGrow {
+  0% { width: 0; }
+  100% { width: 100%; }
+}
+
+.welcome-subtitle {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 80%;
+  opacity: 0.9;
+  animation: fadeInUp 1.5s ease-in-out;
+  animation-delay: 1.2s;
+}
+
+.highlight-text {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.carousel-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  animation: fadeInUp 1.5s ease-in-out;
+  animation-delay: 1.5s;
+}
+
+.carousel-button {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.7); /* Bottoni trasparenti al 70% */
+  color: #003366;
+  padding: 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  width: 300px;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px); /* Effetto sfocatura per migliorare la leggibilità */
+}
+
+.carousel-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.carousel-button:hover::before {
+  left: 100%;
+}
+
+.carousel-button.primary {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.carousel-button.secondary {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.carousel-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.8); /* Leggermente meno trasparente in hover */
+}
+
+.button-label {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #003366;
+}
+
+.button-year {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.button-arrow {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: #003366;
+  transition: transform 0.3s ease;
+}
+
+.carousel-button:hover .button-arrow {
+  transform: translateX(5px);
+}
+
+.carousel-controls {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 5;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.carousel-arrow {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-arrow:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.carousel-indicators {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.carousel-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-indicator.active {
+  background: white;
+  transform: scale(1.2);
+}
+
+.scroll-indicator {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  z-index: 5;
+  animation: bounce 2s infinite;
+}
+
+.scroll-icon {
+  width: 30px;
+  height: 50px;
+  border: 2px solid white;
+  border-radius: 15px;
+  margin-bottom: 0.5rem;
+  position: relative;
+}
+
+.scroll-icon::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background: white;
+  border-radius: 50%;
+  animation: scrollDown 2s infinite;
+}
+
+@keyframes scrollDown {
+  0% { top: 8px; opacity: 1; }
+  50% { top: 25px; opacity: 0.5; }
+  100% { top: 8px; opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0) translateX(-50%); }
+  40% { transform: translateY(-10px) translateX(-50%); }
+  60% { transform: translateY(-5px) translateX(-50%); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive styles */
+@media (max-width: 992px) {
+  .welcome-message {
+    font-size: 2.8rem;
+  }
+  
+  .welcome-line-3 {
+    font-size: 3.2rem;
+  }
+  
+  .carousel-buttons {
+    flex-direction: column;
+  }
+  
+  .carousel-button {
+    width: 100%;
+  }
+  
+  .university-label {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .welcome-message {
+    font-size: 2.2rem;
+  }
+  
+  .welcome-line-3 {
+    font-size: 2.6rem;
+  }
+  
+  .welcome-subtitle {
+    max-width: 100%;
+  }
+  
+  .carousel-content {
+    width: 95%;
+  }
+  
+  .university-label {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .welcome-message {
+    font-size: 1.8rem;
+  }
+  
+  .welcome-line-3 {
+    font-size: 2.2rem;
+  }
+  
+  .university-label {
+    font-size: 1rem;
+    letter-spacing: 2px;
+  }
+  
+  .carousel-controls {
+    bottom: 15%;
+  }
+  
+  .scroll-indicator {
+    display: none;
+  }
+}

@@ -1,72 +1,37 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faGraduationCap, faUniversity, faBookOpen, faUserGraduate, 
+import {
+  faGraduationCap, faUniversity, faBookOpen, faUserGraduate,
   faChalkboardTeacher, faCalendarAlt, faArrowRight, faArrowLeft,
   faMapMarkerAlt, faPhone, faEnvelope, faGlobe, faBuilding,
   faChevronRight, faUsers, faAward, faSchool, faClock,
-  faBrain, faFlask, faLaptopCode, faHandshake
+  faBrain, faFlask, faLaptopCode, faHandshake, faLightbulb,
+  faSearch, faGlobeEurope, faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 import UniversityStatistics from '../components/UniversityStatistics';
 import { Link } from 'react-router-dom';
 import '../styles/ModernHome.css';
 import '../styles/CustomStyles.css';
 import '../styles/EnhancedAnimations.css';
-
-// Componente per le stelle scintillanti
-const StarryBackground = () => {
-  const [stars, setStars] = useState([]);
-  
-  useEffect(() => {
-    const generateStars = () => {
-      const newStars = [];
-      const starCount = 50;
-      
-      for (let i = 0; i < starCount; i++) {
-        newStars.push({
-          id: i,
-          left: `${Math.random() * 100}%`,
-          top: `${Math.random() * 100}%`,
-          size: `${Math.random() * 3 + 1}px`,
-          duration: `${Math.random() * 3 + 2}s`,
-          delay: `${Math.random() * 2}s`
-        });
-      }
-      
-      setStars(newStars);
-    };
-    
-    generateStars();
-  }, []);
-  
-  return (
-    <div className="hero-stars">
-      {stars.map(star => (
-        <div 
-          key={star.id}
-          className="star"
-          style={{
-            left: star.left,
-            top: star.top,
-            width: star.size,
-            height: star.size,
-            animationDuration: star.duration,
-            animationDelay: star.delay,
-            '--duration': star.duration
-          }}
-        />
-      ))}
-    </div>
-  );
-};
+import '../styles/ImmersiveStyles.css';
 
 // Componente principale della homepage
 const HomePage = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [visibleElements, setVisibleElements] = useState({});
-  const heroRef = useRef(null);
+  const [currentSlide, setCurrentSlide] = useState(0);
   
+  // Immagini per il carosello
+  const carouselImages = [
+    '/images/campus1.png',
+    '/images/campus2.png',
+    '/images/campus3.png',
+    '/images/campus4.png',
+    '/images/campus5.png',
+    '/images/campus6.png'
+  ];
+
   // Effetto per rilevare lo scroll e aggiornare la navbar
   useEffect(() => {
     const handleScroll = () => {
@@ -106,40 +71,22 @@ const HomePage = () => {
     };
   }, []);
 
-  // Effetto per le animazioni della hero section
+  // Effetto per il cambio automatico delle slide del carosello
   useEffect(() => {
-    if (heroRef.current) {
-      const heroElements = heroRef.current.querySelectorAll('.animate-element');
-      heroElements.forEach((el, index) => {
-        el.style.animationDelay = `${0.3 * (index + 1)}s`;
-        el.classList.add('animate-fadeIn');
-      });
-      
-      // Crea stelle scintillanti
-      const createStars = () => {
-        const starsContainer = document.createElement('div');
-        starsContainer.className = 'hero-stars';
-        
-        for (let i = 0; i < 50; i++) {
-          const star = document.createElement('div');
-          star.className = 'star';
-          star.style.left = `${Math.random() * 100}%`;
-          star.style.top = `${Math.random() * 100}%`;
-          star.style.width = `${Math.random() * 3 + 1}px`;
-          star.style.height = star.style.width;
-          star.style.animationDuration = `${Math.random() * 3 + 2}s`;
-          star.style.animationDelay = `${Math.random() * 2}s`;
-          star.style.setProperty('--duration', star.style.animationDuration);
-          
-          starsContainer.appendChild(star);
-        }
-        
-        heroRef.current.appendChild(starsContainer);
-      };
-      
-      createStars();
+    const interval = setInterval(() => {
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % carouselImages.length);
+    }, 5000); // Cambia slide ogni 5 secondi
+
+    return () => clearInterval(interval);
+  }, [carouselImages.length]);
+
+  // Funzione per lo scroll alla sezione successiva
+  const scrollToNextSection = () => {
+    const nextSection = document.querySelector('.quick-access');
+    if (nextSection) {
+      nextSection.scrollIntoView({ behavior: 'smooth' });
     }
-  }, []);
+  };
 
   // Dati di esempio per le notizie
   const newsData = [
@@ -220,62 +167,56 @@ const HomePage = () => {
 
   return (
     <div className="modern-home">
-      {/* Hero Section con animazioni avanzate - Rimossa hero-wave come richiesto */}
-      <section className="hero-section-animated" ref={heroRef}>
-        <div className="hero-particles"></div>
-        <StarryBackground />
-        <Container>
-          <div className="row align-items-center">
-            <div className="col-lg-7 hero-content">
-              <h1 className="hero-title animate-element">
-                <span className="text-highlight">Benvenuto</span> all'Università Parthenope
-              </h1>
-              <p className="hero-subtitle animate-element">
-                Un'istituzione accademica d'eccellenza con una lunga tradizione nell'istruzione superiore, 
-                focalizzata sulla ricerca e sulla formazione di qualità.
-              </p>
-              <div className="hero-features animate-element">
-                <div className="hero-feature">
-                  <div className="hero-feature-icon">
-                    <FontAwesomeIcon icon={faUserGraduate} />
-                  </div>
-                  <div className="hero-feature-text">Eccellenza Accademica</div>
-                </div>
-                <div className="hero-feature">
-                  <div className="hero-feature-icon">
-                    <FontAwesomeIcon icon={faGlobe} />
-                  </div>
-                  <div className="hero-feature-text">Prospettiva Internazionale</div>
-                </div>
-                <div className="hero-feature">
-                  <div className="hero-feature-icon">
-                    <FontAwesomeIcon icon={faChalkboardTeacher} />
-                  </div>
-                  <div className="hero-feature-text">Docenti Qualificati</div>
-                </div>
-              </div>
-              <div className="hero-buttons animate-element">
-                <a href="/offerta-formativa" className="btn btn-primary-modern me-3">
-                  Scopri i Corsi
-                </a>
-                <a href="/about" className="btn btn-outline-modern">
-                  Chi Siamo
-                </a>
-              </div>
+      {/* INIZIO SEZIONE MODIFICATA: Hero Section con carosello di immagini */}
+      <section className="fullscreen-carousel">
+        <div className="carousel-container">
+          {carouselImages.map((image, index) => (
+            <div
+              key={index}
+              className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
+              style={{ backgroundImage: `url(${image})` }}
+            >
+              <div className="blue-overlay"></div>
             </div>
-            <div className="col-lg-5 d-none d-lg-block hero-image animate-element">
-              <div className="hero-image-container">
-                <img 
-                  src="https://via.placeholder.com/600x400/003366/ffffff?text=Università+Parthenope" 
-                  alt="Università Parthenope" 
-                  className="img-fluid rounded shadow-lg"
-                />
-                <div className="hero-image-decoration"></div>
-              </div>
+          ))}
+          
+          <div className="carousel-content">
+            <div className="university-label">UNIVERSITÀ DEGLI STUDI DI NAPOLI PARTHENOPE</div>
+            
+            <div className="welcome-message-container">
+              <h1 className="welcome-message">
+                <span className="welcome-line-1">Il tuo <span className="highlight">percorso</span> nel mondo</span>
+                <span className="welcome-line-2">con la nostra storia di</span>
+                <span className="welcome-line-3">Conoscenza</span>
+              </h1>
+              
+              <p className="welcome-subtitle">
+                L'innovazione, l'imprenditorialità, l'immaginazione. <span className="highlight-text">Preparare gli studenti al futuro è la nostra missione.</span>
+              </p>
+            </div>
+            
+            <div className="carousel-buttons">
+              <a href="/university-info" className="carousel-button primary">
+                <span className="button-label">Informazioni dell'Università</span>
+                <span className="button-year">STORIA E TRADIZIONE</span>
+                <span className="button-arrow"><FontAwesomeIcon icon={faArrowRight} /></span>
+              </a>
+              
+              <a href="/corsi" className="carousel-button secondary">
+                <span className="button-label">Scopri i nostri corsi</span>
+                <span className="button-year">OFFERTA FORMATIVA 2025/2026</span>
+                <span className="button-arrow"><FontAwesomeIcon icon={faArrowRight} /></span>
+              </a>
             </div>
           </div>
-        </Container>
+          
+          <div className="scroll-indicator" onClick={scrollToNextSection}>
+            <div className="scroll-icon"></div>
+            <span>Scorri per esplorare</span>
+          </div>
+        </div>
       </section>
+      {/* FINE SEZIONE MODIFICATA */}
 
       {/* Accesso Rapido ai Servizi con animazioni avanzate */}
       <section className="quick-access py-5">
